@@ -24,9 +24,10 @@
 - **7. Stunde**: 14:30 - 15:15 Uhr
 - **8. Stunde**: 15:20 - 16:05 Uhr
 
-### Montessori-Stunden
-- **Freiarbeit**: Jede 3. und 4. Stunde an jedem Werktag
-- Konzept "Montessori plus" seit 2019
+### Montessori-Stunden (nur Sekundarstufe I)
+- **Freiarbeit**: Jede 3. und 4. Stunde an jedem Werktag in den Klassen 5-10
+- Konzept "Montessori plus" seit 2019 (nur bis Klasse 10)
+- WICHTIG: In der Oberstufe (Sek 2) gibt es keine Freiarbeit/Montessori Plus mehr
 
 ### Ganztagsgymnasium
 - Nachmittagsbetreuung verfügbar
@@ -35,8 +36,8 @@
 
 ### Montessori-Pädagogik
 - Angebotsschule für ganz Düsseldorf
-- Einziges Gymnasium in Düsseldorf mit Montessori-Konzept von Klasse 5 bis zum Abitur
-- Freiarbeit und vielfältige Projekte ("Montessori plus")
+- Einziges Gymnasium in Düsseldorf mit Montessori-Konzept (Klasse 5-10) und regulärer Oberstufe bis zum Abitur
+- Freiarbeit und vielfältige Projekte ("Montessori plus") in der Sekundarstufe I (Klasse 5-10)
 
 ### LMG engagiert
 - Alle Schülerinnen und Schüler der 9. Jahrgangsstufe leisten 40-60 Stunden ehrenamtliche Arbeit
@@ -254,6 +255,7 @@ Gewährte NTA-Maßnahmen müssen in der Schülerakte vermerkt werden.
 Bei sonderpädagogischem Unterstützungsbedarf ist die Dokumentation im individuellen Förderplan verpflichtend.
 
 NTA-Maßnahmen werden nicht im Zeugnis vermerkt.
+
 
 
 
