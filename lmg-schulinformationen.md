@@ -164,3 +164,23 @@
 
 ### Kontaktinformationen
 - Für Kontaktdaten und weitere Informationen besuchen Sie bitte die Schulwebsite: www.leibniz-montessori.de
+
+### Talentförderung
+Die Talentförderung am LMG bietet ein vielseitiges Programm, um talentierte Schülerinnen und Schüler auf ihrem Weg auch über den Unterricht hinaus zu unterstützen - auch noch nach der Schule. Wir bieten unter anderem:
+- Drehtürmodell
+- Interessensmodule M+
+- Individuel differenzierte Förderung im Unterricht
+- Talentscreening in Kooperation mit dem Haus der Talente (HdT) und der HHU
+- Doppelsprachlermodell
+- Doppeldiffkursmodell
+- Überspringen von Klassenstufen
+- Schülerakademie (Q1+)
+- Juniorakademie (Mittelstufe)
+- Juniorstudium
+- Vermittlung an außerschulische Förderangebote, zB. Lernferien, Cybermentoring, Stipendien
+- Ferienkurse im HDT
+- Mitglied Zukunftsschule NRW
+- LEMAS Schule
+- Wettbewerbe wie Mathe-Olympiade, Big Challenge oder Jugend Programmiert
+- Kooperation mit den Jugendgruppen des Schauspielhauses
+
