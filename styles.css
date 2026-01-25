@@ -191,10 +191,10 @@ body {
 }
 
 .message.user .message-content {
-    background: rgba(255, 255, 255, 0.18);
+    background: rgba(255, 185, 0, 0.22);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 185, 0, 0.35);
     color: white;
     border-bottom-right-radius: 4px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
