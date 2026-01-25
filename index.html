@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schul Co-Teacher | KI-Lernassistent</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🎓 Schul Co-Teacher</h1>
+            <p>Dein KI-gestützter Lernbegleiter</p>
+        </header>
+
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <!-- Messages Area -->
+            <div id="messages" class="messages">
+                <div class="message assistant">
+                    <div class="message-content">
+                        <p>Hallo! Ich bin dein Schul Co-Teacher. Wie kann ich dir heute helfen?</p>
+                        <ul>
+                            <li>📚 Nachhilfe und Erklärungen</li>
+                            <li>✅ Aufgaben überprüfen</li>
+                            <li>🚀 Anspruchsvollere Aufgaben für starke Schüler</li>
+                        </ul>
+                    </div>
+                    <span class="timestamp" id="initial-time"></span>
+                </div>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loading" class="loading" style="display: none;">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <input
+                    type="text"
+                    id="userInput"
+                    placeholder="Stelle eine Frage oder sende eine Aufgabe..."
+                    autocomplete="off"
+                >
+                <button id="sendButton">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M2 10L18 2L10 18L9 11L2 10Z" fill="currentColor"/>
+                    </svg>
+                    Senden
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Powered by Google Gemini AI</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
