@@ -53,7 +53,8 @@ module.exports = async (req, res) => {
 
         // Initialisiere Google Generative AI
         const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-        const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+        // Verwende Gemma 3 Modell (alternativ: 'gemma-3-27b-it' für mehr Leistung)
+        const model = genAI.getGenerativeModel({ model: 'gemma-3-12b-it' });
 
         // Baue Chat-Verlauf auf
         const chatHistory = history?.map(msg => ({
