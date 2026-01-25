@@ -185,4 +185,75 @@ Die Talentförderung am LMG bietet ein vielseitiges Programm, um talentierte Sch
 - Kooperation mit den Jugendgruppen des Schauspielhauses
 - Partnerschule digitale Drehtür
 
+### Nachteilsausgleiche
+
+Nachteilsausgleiche in der Gymnasialen Oberstufe (NRW)
+1. Einleitung und Grundsätze
+Der Anspruch auf individuelle Förderung ist in § 1 des Schulgesetzes NRW festgelegt.
+
+Schülerinnen und Schüler erhalten einen Nachteilsausgleich (NTA), wenn sie aufgrund einer Behinderung, eines Bedarfs an sonderpädagogischer Unterstützung oder einer Erkrankung ihre Leistungen nicht begabungsgemäß erbringen können.
+
+Der grundsätzliche Anspruch aus der Sekundarstufe I bleibt in der Sekundarstufe II bestehen.
+
+NTA-Maßnahmen sollen im Verlauf der Oberstufe nach Möglichkeit sukzessive abgebaut werden, sofern die Beeinträchtigung dies zulässt.
+
+Fachliche Leistungsanforderungen bei Abschlüssen und Berechtigungen bleiben durch einen NTA unberührt.
+
+2. Wer kann Nachteilsausgleich erhalten?
+Schüler mit Behinderungen, medizinisch attestierten chronischen Erkrankungen oder diagnostizierten Störungen (z. B. Autismus-Spektrum).
+
+Schüler mit einem durch die Schulaufsicht festgestellten Bedarf an sonderpädagogischer Unterstützung.
+
+
+Schüler mit akuten Beeinträchtigungen, wie z. B. einer gebrochenen Hand nach einem Unfall (ärztliches Attest erforderlich).
+
+In Einzelfällen Schüler mit besonders schwerer Beeinträchtigung des Lesens und Rechtschreibens.
+
+
+Ausschluss: Eine Rechenschwäche kann in NRW grundsätzlich nicht durch einen NTA berücksichtigt werden.
+
+3. Gestaltung des Nachteilsausgleichs
+Jeder NTA ist individuell zu gestalten; eine schematische Übertragung ist nicht zulässig. Typische Maßnahmen sind:
+
+
+Zeitlich: Ausweitung der Arbeits- oder Vorbereitungszeit sowie Verlängerung von Pausen.
+
+
+Technisch: Nutzung von Hilfsmitteln wie Lesegeräten, Lupen oder Laptops ohne Rechtschreibkorrektur.
+
+Räumlich: Besondere Arbeitsplatzorganisation, z. B. ein blendungsarmer Sitzplatz oder eine ablenkungsarme Umgebung.
+
+Personell: Unterstützung durch eine Assistenz, z. B. bei der Arbeitsorganisation.
+
+
+Besonderheit LRS: Ein NTA beschränkt sich hier meist auf eine Zeitzugabe, da die Bewertung der sprachlichen Richtigkeit in der Oberstufe verpflichtend bleibt.
+
+4. Verfahren und Zuständigkeiten
+In der Qualifikationsphase (EF, Q1, Q2)
+Die Entscheidung über Bewilligung, Art und Umfang obliegt der Schulleitung.
+
+Anträge werden formlos bei der Schulleitung gestellt.
+
+Die Schulleitung legt den NTA nach Beratung mit der Stufenkonferenz und Rücksprache mit den Beteiligten fest.
+
+Bei den zentralen Klausuren am Ende der EF entscheidet ebenfalls die Schulleitung.
+
+In der Abiturprüfung
+Bei landeseinheitlich gestellten Aufgaben (Zentralabitur) entscheidet die obere Schulaufsichtsbehörde.
+
+
+Die Schulleitung stellt den Antrag spätestens nach den Herbstferien des Vorjahres der Abiturprüfung.
+
+Ein wesentliches Kriterium für die Genehmigung ist die Dokumentation der bereits während der Sekundarstufe II gewährten NTA-Maßnahmen.
+
+
+5. Dokumentation
+Gewährte NTA-Maßnahmen müssen in der Schülerakte vermerkt werden.
+
+
+Bei sonderpädagogischem Unterstützungsbedarf ist die Dokumentation im individuellen Förderplan verpflichtend.
+
+NTA-Maßnahmen werden nicht im Zeugnis vermerkt.
+
+
 
