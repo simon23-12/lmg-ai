@@ -1,18 +1,21 @@
 // Vercel Serverless Function für Google Gemini API
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-// Cache für Modulübersicht (wird beim ersten Request geladen)
+// Cache für Modulübersicht und Schulinformationen (wird beim ersten Request geladen)
 let moduleOverviewCache = null;
-let cacheTimestamp = null;
+let moduleOverviewCacheTimestamp = null;
+let schoolInfoCache = null;
+let schoolInfoCacheTimestamp = null;
 const CACHE_DURATION = 3600000; // 1 Stunde in Millisekunden
 
-// GitHub Raw URL für Modulübersicht
+// GitHub Raw URLs
 const MODULE_OVERVIEW_URL = 'https://raw.githubusercontent.com/simon23-12/lmg-ai/main/lmg-moduluebersicht.md';
+const SCHOOL_INFO_URL = 'https://raw.githubusercontent.com/simon23-12/lmg-ai/main/lmg-schulinformationen.md';
 
 // Funktion zum Laden der Modulübersicht von GitHub
 async function fetchModuleOverview() {
     // Prüfe Cache
-    if (moduleOverviewCache && cacheTimestamp && (Date.now() - cacheTimestamp) < CACHE_DURATION) {
+    if (moduleOverviewCache && moduleOverviewCacheTimestamp && (Date.now() - moduleOverviewCacheTimestamp) < CACHE_DURATION) {
         return moduleOverviewCache;
     }
 
@@ -25,11 +28,36 @@ async function fetchModuleOverview() {
 
         // Cache aktualisieren
         moduleOverviewCache = text;
-        cacheTimestamp = Date.now();
+        moduleOverviewCacheTimestamp = Date.now();
 
         return text;
     } catch (error) {
         console.error('Fehler beim Laden der Modulübersicht:', error);
+        return null;
+    }
+}
+
+// Funktion zum Laden der Schulinformationen von GitHub
+async function fetchSchoolInfo() {
+    // Prüfe Cache
+    if (schoolInfoCache && schoolInfoCacheTimestamp && (Date.now() - schoolInfoCacheTimestamp) < CACHE_DURATION) {
+        return schoolInfoCache;
+    }
+
+    try {
+        const response = await fetch(SCHOOL_INFO_URL);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const text = await response.text();
+
+        // Cache aktualisieren
+        schoolInfoCache = text;
+        schoolInfoCacheTimestamp = Date.now();
+
+        return text;
+    } catch (error) {
+        console.error('Fehler beim Laden der Schulinformationen:', error);
         return null;
     }
 }
@@ -48,6 +76,35 @@ function isModuleRelatedQuery(message) {
 
     const lowerMessage = message.toLowerCase();
     return moduleKeywords.some(keyword => lowerMessage.includes(keyword));
+}
+
+// Funktion zum Prüfen, ob eine Nachricht schulinfo-bezogen ist
+function isSchoolInfoRelatedQuery(message) {
+    const schoolInfoKeywords = [
+        'stundenmodell', 'stundenplan', 'unterrichtszeit', 'schulzeit',
+        'wann beginnt', 'wann endet', 'uhrzeit', 'stunde',
+        'pause', 'mittagspause',
+        'montessori', 'freiarbeit',
+        'mensa', 'essen', 'mittagessen', 'verpflegung', 'vegetarisch',
+        'wettbewerb', 'ag ', ' ags ', 'arbeitsgemeinschaft', 'workshop',
+        'bilingual', 'griechisch', 'fremdsprache', 'sprachen',
+        'geschichte der schule', 'gründung', 'gegründet',
+        'schüler', 'lehrer', 'lehrkräfte', 'schulleitung',
+        'adresse', 'lage', 'standort', 'wo liegt', 'wo ist', 'düsseldorf', 'pempelfort', 'scharnhorststraße',
+        'ganztagsgymnasium', 'nachmittagsbetreuung',
+        'krankmeldung', 'krank melden',
+        'tag der offenen tür', 'aufnahme', 'anmeldung',
+        'kontakt', 'telefon', 'email',
+        'lmg engagiert', 'ehrenamt',
+        'chor', 'orchester', 'musical', 'theater',
+        'sportfest', 'stadtmeisterschaft',
+        'cambridge', 'delf', 'sprachdiplom',
+        'jugend forscht', 'jugend debattiert',
+        'big challenge', 'känguru', 'matheolympiade'
+    ];
+
+    const lowerMessage = message.toLowerCase();
+    return schoolInfoKeywords.some(keyword => lowerMessage.includes(keyword));
 }
 
 // System Prompt für LMG AI
@@ -86,6 +143,20 @@ Wenn Schüler nach Modulen fragen, nutze diese Informationen um:
 Modulübersicht:
 {MODULE_OVERVIEW}`;
 
+const SCHOOL_INFO_CONTEXT_ADDITION = `
+
+WICHTIG - SCHULINFORMATIONEN:
+Du hast Zugriff auf detaillierte Informationen über das Leibniz-Montessori-Gymnasium.
+Wenn Schüler nach Schulorganisation, Zeiten, AGs, Wettbewerben oder anderen schulspezifischen Informationen fragen, nutze diese Informationen.
+
+WICHTIG ZU KONTAKTDATEN UND DATENSCHUTZ:
+- Gib NIEMALS direkte Telefonnummern, E-Mail-Adressen oder Namen von Lehrkräften heraus
+- Verweise Schüler bei Kontaktfragen immer an die Schulwebsite: www.leibniz-montessori.de
+- Bei Fragen zu Tag der offenen Tür, Anmeldung, etc. verweise ebenfalls auf die Website
+
+Schulinformationen:
+{SCHOOL_INFO}`;
+
 module.exports = async (req, res) => {
     // CORS Headers
     res.setHeader('Access-Control-Allow-Credentials', true);
@@ -117,15 +188,31 @@ module.exports = async (req, res) => {
             });
         }
 
-        // Prüfe ob die Nachricht modulbezogen ist und lade ggf. Modulübersicht
+        // Prüfe ob zusätzliche Kontextinformationen benötigt werden
         let systemPrompt = BASE_SYSTEM_PROMPT;
-        if (isModuleRelatedQuery(message)) {
-            const moduleOverview = await fetchModuleOverview();
+
+        // Prüfe Modulübersicht
+        const needsModuleInfo = isModuleRelatedQuery(message);
+        // Prüfe Schulinformationen
+        const needsSchoolInfo = isSchoolInfoRelatedQuery(message);
+
+        // Lade benötigte Informationen parallel
+        if (needsModuleInfo || needsSchoolInfo) {
+            const [moduleOverview, schoolInfo] = await Promise.all([
+                needsModuleInfo ? fetchModuleOverview() : Promise.resolve(null),
+                needsSchoolInfo ? fetchSchoolInfo() : Promise.resolve(null)
+            ]);
+
+            // Füge Modulübersicht hinzu
             if (moduleOverview) {
-                systemPrompt = BASE_SYSTEM_PROMPT + MODULE_CONTEXT_ADDITION.replace('{MODULE_OVERVIEW}', moduleOverview);
+                systemPrompt += MODULE_CONTEXT_ADDITION.replace('{MODULE_OVERVIEW}', moduleOverview);
                 console.log('Modulübersicht geladen und zum System Prompt hinzugefügt');
-            } else {
-                console.log('Modulübersicht konnte nicht geladen werden, verwende Standard-Prompt');
+            }
+
+            // Füge Schulinformationen hinzu
+            if (schoolInfo) {
+                systemPrompt += SCHOOL_INFO_CONTEXT_ADDITION.replace('{SCHOOL_INFO}', schoolInfo);
+                console.log('Schulinformationen geladen und zum System Prompt hinzugefügt');
             }
         }
 
