@@ -183,4 +183,6 @@ Die Talentförderung am LMG bietet ein vielseitiges Programm, um talentierte Sch
 - LEMAS Schule
 - Wettbewerbe wie Mathe-Olympiade, Big Challenge oder Jugend Programmiert
 - Kooperation mit den Jugendgruppen des Schauspielhauses
+- Partnerschule digitale Drehtür
+
 
