@@ -6,6 +6,7 @@ const messagesContainer = document.getElementById('messages');
 const userInput = document.getElementById('userInput');
 const sendButton = document.getElementById('sendButton');
 const loading = document.getElementById('loading');
+const clearButton = document.getElementById('clearButton');
 
 // Initiale Zeit setzen
 document.getElementById('initial-time').textContent = formatTime(new Date());
@@ -16,6 +17,13 @@ userInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         sendMessage();
+    }
+});
+
+// Clear Button
+clearButton.addEventListener('click', () => {
+    if (confirm('Möchtest du den gesamten Chatverlauf löschen?')) {
+        clearChat();
     }
 });
 
@@ -110,6 +118,23 @@ function formatTime(date) {
         hour: '2-digit',
         minute: '2-digit'
     });
+}
+
+// Chatverlauf löschen
+function clearChat() {
+    // Alle Nachrichten außer der ersten (Begrüßung) entfernen
+    const messages = messagesContainer.querySelectorAll('.message');
+    messages.forEach((msg, index) => {
+        if (index > 0) { // Erste Nachricht behalten
+            msg.remove();
+        }
+    });
+
+    // Chat-History leeren
+    chatHistory = [];
+
+    // Input fokussieren
+    userInput.focus();
 }
 
 // Initial Focus

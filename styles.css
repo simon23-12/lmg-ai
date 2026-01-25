@@ -28,6 +28,36 @@ body {
     border-radius: 15px 15px 0 0;
     text-align: center;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.clear-button {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    width: 40px;
+    height: 40px;
+    background: #FFB900;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s, transform 0.1s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.clear-button:hover {
+    background: #E5A600;
+    transform: scale(1.05);
+}
+
+.clear-button:active {
+    transform: scale(0.95);
 }
 
 .header .logo {

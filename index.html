@@ -10,6 +10,7 @@
     <div class="container">
         <!-- Header -->
         <header class="header">
+            <button id="clearButton" class="clear-button" title="Chatverlauf löschen">✕</button>
             <img src="LMG.png" alt="LMG Logo" class="logo">
             <h1>LMG AI</h1>
             <p>Dein KI-gestützter Lernbegleiter</p>
@@ -21,12 +22,7 @@
             <div id="messages" class="messages">
                 <div class="message assistant">
                     <div class="message-content">
-                        <p>Hallo! Ich bin LMG AI. Wie kann ich dir heute helfen?</p>
-                        <ul>
-                            <li>📚 Nachhilfe und Erklärungen</li>
-                            <li>✅ Aufgaben überprüfen</li>
-                            <li>🚀 Anspruchsvollere Aufgaben für starke Schüler</li>
-                        </ul>
+                        <p>Hallo, ich bin die hausinterne künstliche Intelligenz des Leibniz-Montessori-Gymnasiums. Wie kann ich dir helfen?</p>
                     </div>
                     <span class="timestamp" id="initial-time"></span>
                 </div>
@@ -46,6 +42,7 @@
                     id="userInput"
                     placeholder="Stelle eine Frage oder sende eine Aufgabe..."
                     autocomplete="off"
+                    maxlength="250"
                 >
                 <button id="sendButton">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
