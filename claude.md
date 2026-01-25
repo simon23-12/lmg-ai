@@ -10,7 +10,7 @@ Ein KI-gestützter Chatbot für das Leibniz-Montessori-Gymnasium (LMG) zur Unter
 - **Frontend**: HTML, CSS (Vanilla), JavaScript (Vanilla)
 - **Backend**: Vercel Serverless Functions
 - **KI-Modell**: Google Gemini API
-  - Primär: `gemini-3-flash`
+  - Primär: `gemini-3-flash-preview`
   - Fallback: `gemini-2.5-flash`
 - **Deployment**: Vercel (automatisch bei Git Push)
 
@@ -19,7 +19,7 @@ Ein KI-gestützter Chatbot für das Leibniz-Montessori-Gymnasium (LMG) zur Unter
 ### API-Setup
 ```javascript
 // In api/chat.js
-const PRIMARY_MODEL = 'gemini-3-flash';
+const PRIMARY_MODEL = 'gemini-3-flash-preview';
 const FALLBACK_MODEL = 'gemini-2.5-flash';
 
 // Modell-Konfiguration
@@ -39,6 +39,7 @@ temperature: 0.7
 4. **Kurze Antworten**: KI ist instruiert, präzise zu antworten (max. 3-4 Sätze)
 5. **Fallback-Logik**: Automatischer Wechsel zu Backup-Modell bei Fehlern
 6. **LMG-Branding**: Logo, angepasste Texte und Farben
+7. **Modulübersicht-Integration**: Dynamisches Laden der Modulübersicht von GitHub bei modul-bezogenen Fragen
 
 ### UI-Komponenten
 - **Logo**: `LMG.png` im Header (60px Höhe)
@@ -74,6 +75,40 @@ Wichtige Regeln:
 Antworte auf Deutsch und sei freundlich und unterstützend.`;
 ```
 
+## Modulübersicht-Integration
+
+### Funktionsweise
+Die API lädt bei Bedarf automatisch die Modulübersicht von GitHub:
+
+```javascript
+// GitHub Raw URL
+const MODULE_OVERVIEW_URL = 'https://raw.githubusercontent.com/simon23-12/lmg-ai/main/lmg-moduluebersicht.md';
+
+// Keyword-Erkennung
+function isModuleRelatedQuery(message) {
+    // Prüft auf Keywords wie "modul", "modulübersicht", "halbjahr", etc.
+}
+
+// Lädt Modulübersicht von GitHub (mit 1-Stunden-Cache)
+async function fetchModuleOverview() {
+    // Lädt lmg-moduluebersicht.md von GitHub
+}
+```
+
+### Features
+- **Intelligente Erkennung**: Die API erkennt automatisch, ob eine Frage modul-bezogen ist
+- **On-Demand Loading**: Modulübersicht wird nur geladen, wenn nötig (spart Tokens)
+- **Caching**: 1-Stunden-Cache reduziert GitHub-Requests
+- **Datenschutz**: Modulübersicht enthält keine Lehrkraftnamen oder -kürzel
+- **GitHub-basiert**: Modulübersicht kann einfach aktualisiert werden (Git Push → automatisch verfügbar)
+
+### Modul-Datei
+- **Datei**: `lmg-moduluebersicht.md`
+- **Location**: GitHub Repository Root
+- **Inhalt**: 13 Fächer, alle Jahrgangsstufen, Pflicht-/Wahl-/Vertiefungsmodule
+- **Format**: Markdown (optimal für Gemini)
+- **Größe**: ~33 KB, ~5.164 Wörter
+
 ## Projektstruktur
 
 ```
@@ -84,6 +119,7 @@ school-chatbot-web/
 ├── styles.css               # Styling
 ├── script.js                # Chat-Funktionalität und Event-Handler
 ├── LMG.png                  # Schullogo
+├── lmg-moduluebersicht.md   # Modulübersicht aller Fächer (wird von API geladen)
 ├── package.json             # Dependencies
 ├── vercel.json              # Vercel Konfiguration
 ├── README.md                # Projektdokumentation
@@ -112,6 +148,9 @@ school-chatbot-web/
 - Fallback-Logik: Primär → Fallback → Fehler
 - CORS-Header sind konfiguriert
 - Fehlerbehandlung mit detailliertem Logging
+- Dynamisches Laden der Modulübersicht von GitHub bei Bedarf
+- Intelligente Keyword-Erkennung für modul-bezogene Fragen
+- 1-Stunden-Cache für Modulübersicht (reduziert API-Calls)
 
 ## Deployment
 
@@ -146,13 +185,14 @@ git push
 2. **LMG AI Branding**: Umbenennung von "Schul Co-Teacher" zu "LMG AI"
 3. **Fallback-Logik**: Automatischer Wechsel zwischen Modellen
 4. **Features**: Zeichenlimit, Clear-Button, Schulthemen-Filter, kurze Antworten
+5. **Modulübersicht**: GitHub-Integration für dynamisches Laden der Modulübersicht
 
 ## Troubleshooting
 
 ### API-Fehler
 - Prüfe ob `GOOGLE_API_KEY` in Vercel Environment Variables gesetzt ist
 - Schaue in Vercel Logs nach Fehlermeldungen
-- Modellnamen überprüfen (gemini-3-flash, gemini-2.5-flash)
+- Modellnamen überprüfen (gemini-3-flash-preview, gemini-2.5-flash)
 
 ### 404 Model Not Found
 - Gemini-Modelle verwenden, nicht Gemma

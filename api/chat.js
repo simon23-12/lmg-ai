@@ -1,8 +1,55 @@
 // Vercel Serverless Function für Google Gemini API
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
+// Cache für Modulübersicht (wird beim ersten Request geladen)
+let moduleOverviewCache = null;
+let cacheTimestamp = null;
+const CACHE_DURATION = 3600000; // 1 Stunde in Millisekunden
+
+// GitHub Raw URL für Modulübersicht
+const MODULE_OVERVIEW_URL = 'https://raw.githubusercontent.com/simon23-12/lmg-ai/main/lmg-moduluebersicht.md';
+
+// Funktion zum Laden der Modulübersicht von GitHub
+async function fetchModuleOverview() {
+    // Prüfe Cache
+    if (moduleOverviewCache && cacheTimestamp && (Date.now() - cacheTimestamp) < CACHE_DURATION) {
+        return moduleOverviewCache;
+    }
+
+    try {
+        const response = await fetch(MODULE_OVERVIEW_URL);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const text = await response.text();
+
+        // Cache aktualisieren
+        moduleOverviewCache = text;
+        cacheTimestamp = Date.now();
+
+        return text;
+    } catch (error) {
+        console.error('Fehler beim Laden der Modulübersicht:', error);
+        return null;
+    }
+}
+
+// Funktion zum Prüfen, ob eine Nachricht Modul-bezogen ist
+function isModuleRelatedQuery(message) {
+    const moduleKeywords = [
+        'modul', 'module', 'modulübersicht',
+        'pflichtmodul', 'wahlmodul', 'vertiefungsmodul', 'interessenmodul',
+        'welche module', 'welches modul', 'was für module',
+        'halbjahr', 'jahrgangsstufe', 'klasse',
+        'unterrichtseinheit', 'lerneinheit'
+    ];
+
+    const lowerMessage = message.toLowerCase();
+    return moduleKeywords.some(keyword => lowerMessage.includes(keyword));
+}
+
 // System Prompt für LMG AI
-const SYSTEM_PROMPT = `Du bist die hausinterne künstliche Intelligenz des Leibniz-Montessori-Gymnasiums. Du unterstützt Schülerinnen und Schüler bei schulrelevanten Themen.
+const BASE_SYSTEM_PROMPT = `Du bist die hausinterne künstliche Intelligenz des Leibniz-Montessori-Gymnasiums. Du unterstützt Schülerinnen und Schüler bei schulrelevanten Themen.
 
 WICHTIG - NUR SCHULTHEMEN:
 - Du beantwortest NUR Fragen zu schulrelevanten Themen (Mathematik, Deutsch, Englisch, Naturwissenschaften, Geschichte, etc.)
@@ -23,6 +70,19 @@ Wichtige Regeln:
 - Frage nach, wenn etwas unklar ist
 
 Antworte auf Deutsch und sei freundlich und unterstützend.`;
+
+const MODULE_CONTEXT_ADDITION = `
+
+WICHTIG - MODULÜBERSICHT:
+Du hast Zugriff auf die vollständige Modulübersicht des LMG für alle Fächer und Jahrgangsstufen.
+Wenn Schüler nach Modulen fragen, nutze diese Informationen um:
+- Module für bestimmte Fächer und Jahrgangsstufen zu empfehlen
+- Inhalte und Themen von Modulen zu erklären
+- Zeitaufwand und Sozialformen zu nennen
+- Zwischen Pflicht-, Übungs-, Vertiefungs- und Interessenmodulen zu unterscheiden
+
+Modulübersicht:
+{MODULE_OVERVIEW}`;
 
 module.exports = async (req, res) => {
     // CORS Headers
@@ -55,6 +115,18 @@ module.exports = async (req, res) => {
             });
         }
 
+        // Prüfe ob die Nachricht modulbezogen ist und lade ggf. Modulübersicht
+        let systemPrompt = BASE_SYSTEM_PROMPT;
+        if (isModuleRelatedQuery(message)) {
+            const moduleOverview = await fetchModuleOverview();
+            if (moduleOverview) {
+                systemPrompt = BASE_SYSTEM_PROMPT + MODULE_CONTEXT_ADDITION.replace('{MODULE_OVERVIEW}', moduleOverview);
+                console.log('Modulübersicht geladen und zum System Prompt hinzugefügt');
+            } else {
+                console.log('Modulübersicht konnte nicht geladen werden, verwende Standard-Prompt');
+            }
+        }
+
         // Initialisiere Google Generative AI
         const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
@@ -76,7 +148,7 @@ module.exports = async (req, res) => {
                 history: [
                     {
                         role: 'user',
-                        parts: [{ text: SYSTEM_PROMPT }]
+                        parts: [{ text: systemPrompt }]
                     },
                     {
                         role: 'model',
