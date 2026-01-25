@@ -1,0 +1,119 @@
+// Vercel Serverless Function für Google Gemini API
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+
+// System Prompt für LMG AI
+const SYSTEM_PROMPT = `Du bist LMG AI, ein hilfreicher KI-Assistent für Schülerinnen und Schüler.
+
+Deine Aufgaben:
+1. NACHHILFE & ERKLÄRUNGEN: Erkläre Konzepte klar und verständlich. Nutze Beispiele und Analogien, die Schüler verstehen.
+2. ERGEBNISSE ÜBERPRÜFEN: Wenn Schüler dir ihre Lösungen zeigen, gib konstruktives Feedback. Zeige nicht sofort die Lösung, sondern gib Hinweise.
+3. FÖRDERUNG STARKER SCHÜLER: Wenn ein Schüler eine Aufgabe gut gemeistert hat, biete anspruchsvollere Aufgaben oder tiefergehende Fragen an.
+4. LERNBEGLEITUNG: Ermutige selbstständiges Denken durch gezielte Fragen statt direkter Antworten.
+
+Wichtige Regeln:
+- Sei geduldig und ermutigend
+- Passe deine Sprache an das Niveau des Schülers an
+- Gib bei Hausaufgaben Hilfestellung, aber keine kompletten Lösungen
+- Frage nach, wenn etwas unklar ist
+- Nutze das Curriculum und die Module der Schule als Kontext (sobald verfügbar)
+- Vermeide Themen zu Räumen, Namen oder persönlichen Daten (Datenschutz)
+
+Antworte auf Deutsch und sei freundlich und unterstützend.`;
+
+module.exports = async (req, res) => {
+    // CORS Headers
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    );
+
+    // Handle OPTIONS request
+    if (req.method === 'OPTIONS') {
+        res.status(200).end();
+        return;
+    }
+
+    // Nur POST erlauben
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+
+    try {
+        const { message, history } = req.body;
+
+        // API Key prüfen
+        if (!process.env.GOOGLE_API_KEY) {
+            return res.status(500).json({
+                error: 'Google API Key ist nicht konfiguriert. Bitte setze GOOGLE_API_KEY in den Vercel Environment Variables.'
+            });
+        }
+
+        // Initialisiere Google Generative AI
+        const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+
+        // Modell-Konfiguration mit Fallback
+        const PRIMARY_MODEL = 'gemini-3-flash';
+        const FALLBACK_MODEL = 'gemini-2.5-flash';
+
+        // Baue Chat-Verlauf auf
+        const chatHistory = history?.map(msg => ({
+            role: msg.role === 'assistant' ? 'model' : 'user',
+            parts: [{ text: msg.content }]
+        })) || [];
+
+        // Funktion zum Senden der Nachricht mit einem bestimmten Modell
+        const sendWithModel = async (modelName) => {
+            const model = genAI.getGenerativeModel({ model: modelName });
+
+            const chat = model.startChat({
+                history: [
+                    {
+                        role: 'user',
+                        parts: [{ text: SYSTEM_PROMPT }]
+                    },
+                    {
+                        role: 'model',
+                        parts: [{ text: 'Verstanden! Ich bin LMG AI und bereit zu helfen.' }]
+                    },
+                    ...chatHistory
+                ],
+                generationConfig: {
+                    maxOutputTokens: 4000,
+                    temperature: 0.7,
+                }
+            });
+
+            const result = await chat.sendMessage(message);
+            return result.response.text();
+        };
+
+        // Versuche primäres Modell, bei Fehler Fallback
+        let text;
+        try {
+            console.log(`Versuche mit ${PRIMARY_MODEL}...`);
+            text = await sendWithModel(PRIMARY_MODEL);
+        } catch (primaryError) {
+            console.log(`${PRIMARY_MODEL} fehlgeschlagen, wechsle zu ${FALLBACK_MODEL}...`);
+            console.error('Primärer Fehler:', primaryError.message);
+
+            try {
+                text = await sendWithModel(FALLBACK_MODEL);
+            } catch (fallbackError) {
+                console.error('Fallback-Fehler:', fallbackError.message);
+                throw fallbackError; // Wirf den Fehler weiter, wenn beide scheitern
+            }
+        }
+
+        return res.status(200).json({ response: text });
+
+    } catch (error) {
+        console.error('Fehler bei der API-Anfrage:', error);
+        return res.status(500).json({
+            error: 'Fehler bei der Verarbeitung der Anfrage',
+            details: error.message
+        });
+    }
+};
