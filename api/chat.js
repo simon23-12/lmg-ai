@@ -1,16 +1,19 @@
 // Vercel Serverless Function für Google Gemini API
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-// Cache für Modulübersicht und Schulinformationen (wird beim ersten Request geladen)
+// Cache für Modulübersicht, Schulinformationen und Curriculum (wird beim ersten Request geladen)
 let moduleOverviewCache = null;
 let moduleOverviewCacheTimestamp = null;
 let schoolInfoCache = null;
 let schoolInfoCacheTimestamp = null;
+let curriculumCache = null;
+let curriculumCacheTimestamp = null;
 const CACHE_DURATION = 3600000; // 1 Stunde in Millisekunden
 
 // GitHub Raw URLs
 const MODULE_OVERVIEW_URL = 'https://raw.githubusercontent.com/simon23-12/lmg-ai/main/lmg-moduluebersicht.md';
 const SCHOOL_INFO_URL = 'https://raw.githubusercontent.com/simon23-12/lmg-ai/main/lmg-schulinformationen.md';
+const CURRICULUM_URL = 'https://raw.githubusercontent.com/simon23-12/lmg-ai/main/Curriculum.md';
 
 // Funktion zum Laden der Modulübersicht von GitHub
 async function fetchModuleOverview() {
@@ -62,6 +65,31 @@ async function fetchSchoolInfo() {
     }
 }
 
+// Funktion zum Laden des Curriculums von GitHub
+async function fetchCurriculum() {
+    // Prüfe Cache
+    if (curriculumCache && curriculumCacheTimestamp && (Date.now() - curriculumCacheTimestamp) < CACHE_DURATION) {
+        return curriculumCache;
+    }
+
+    try {
+        const response = await fetch(CURRICULUM_URL);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const text = await response.text();
+
+        // Cache aktualisieren
+        curriculumCache = text;
+        curriculumCacheTimestamp = Date.now();
+
+        return text;
+    } catch (error) {
+        console.error('Fehler beim Laden des Curriculums:', error);
+        return null;
+    }
+}
+
 // Funktion zum Prüfen, ob eine Nachricht Modul-bezogen ist
 function isModuleRelatedQuery(message) {
     const moduleKeywords = [
@@ -105,6 +133,24 @@ function isSchoolInfoRelatedQuery(message) {
 
     const lowerMessage = message.toLowerCase();
     return schoolInfoKeywords.some(keyword => lowerMessage.includes(keyword));
+}
+
+// Funktion zum Prüfen, ob eine Nachricht Curriculum-bezogen ist
+function isCurriculumRelatedQuery(message) {
+    const curriculumKeywords = [
+        'thema', 'themen', 'lehrplan', 'curriculum',
+        'was steht an', 'was kommt dran', 'was lernen wir', 'was behandeln wir',
+        'unterrichtsstoff', 'unterrichtsinhalt', 'lerninhalt',
+        'in klasse', 'in der klasse', 'jahrgangsstufe', 'jahrgang',
+        'in klasse 5', 'in klasse 6', 'in klasse 7', 'in klasse 8', 'in klasse 9', 'in klasse 10',
+        'in der 5', 'in der 6', 'in der 7', 'in der 8', 'in der 9', 'in der 10',
+        'in der ef', 'in der q1', 'in der q2', 'in ef', 'in q1', 'in q2',
+        'oberstufe', 'qualifikationsphase', 'einführungsphase',
+        'welche themen', 'welches thema', 'was für themen'
+    ];
+
+    const lowerMessage = message.toLowerCase();
+    return curriculumKeywords.some(keyword => lowerMessage.includes(keyword));
 }
 
 // System Prompt für LMG AI
@@ -158,6 +204,20 @@ WICHTIG ZU KONTAKTDATEN UND DATENSCHUTZ:
 Schulinformationen:
 {SCHOOL_INFO}`;
 
+const CURRICULUM_CONTEXT_ADDITION = `
+
+WICHTIG - SCHULINTERNES CURRICULUM:
+Du hast Zugriff auf das vollständige schulinterne Curriculum des LMG für alle Fächer und Jahrgangsstufen (5-13, EF, Q1, Q2).
+Wenn Schüler oder Eltern nach Unterrichtsthemen oder Lerninhalten fragen, nutze diese Informationen um:
+- Themen für bestimmte Fächer und Jahrgangsstufen aufzulisten
+- Einen Überblick zu geben, was in welcher Klassenstufe behandelt wird
+- Bei Fragen wie "Was steht in Klasse 6 in Mathe an?" präzise zu antworten
+
+HINWEIS: Dies ist das offizielle Curriculum mit Unterrichtsthemen. Für Montessori-spezifische Module siehe die Modulübersicht.
+
+Curriculum:
+{CURRICULUM}`;
+
 module.exports = async (req, res) => {
     // CORS Headers
     res.setHeader('Access-Control-Allow-Credentials', true);
@@ -192,16 +252,17 @@ module.exports = async (req, res) => {
         // Prüfe ob zusätzliche Kontextinformationen benötigt werden
         let systemPrompt = BASE_SYSTEM_PROMPT;
 
-        // Prüfe Modulübersicht
+        // Prüfe welche Kontexte benötigt werden
         const needsModuleInfo = isModuleRelatedQuery(message);
-        // Prüfe Schulinformationen
         const needsSchoolInfo = isSchoolInfoRelatedQuery(message);
+        const needsCurriculum = isCurriculumRelatedQuery(message);
 
         // Lade benötigte Informationen parallel
-        if (needsModuleInfo || needsSchoolInfo) {
-            const [moduleOverview, schoolInfo] = await Promise.all([
+        if (needsModuleInfo || needsSchoolInfo || needsCurriculum) {
+            const [moduleOverview, schoolInfo, curriculum] = await Promise.all([
                 needsModuleInfo ? fetchModuleOverview() : Promise.resolve(null),
-                needsSchoolInfo ? fetchSchoolInfo() : Promise.resolve(null)
+                needsSchoolInfo ? fetchSchoolInfo() : Promise.resolve(null),
+                needsCurriculum ? fetchCurriculum() : Promise.resolve(null)
             ]);
 
             // Füge Modulübersicht hinzu
@@ -214,6 +275,12 @@ module.exports = async (req, res) => {
             if (schoolInfo) {
                 systemPrompt += SCHOOL_INFO_CONTEXT_ADDITION.replace('{SCHOOL_INFO}', schoolInfo);
                 console.log('Schulinformationen geladen und zum System Prompt hinzugefügt');
+            }
+
+            // Füge Curriculum hinzu
+            if (curriculum) {
+                systemPrompt += CURRICULUM_CONTEXT_ADDITION.replace('{CURRICULUM}', curriculum);
+                console.log('Curriculum geladen und zum System Prompt hinzugefügt');
             }
         }
 
