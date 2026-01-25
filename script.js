@@ -7,6 +7,7 @@ const userInput = document.getElementById('userInput');
 const sendButton = document.getElementById('sendButton');
 const loading = document.getElementById('loading');
 const clearButton = document.getElementById('clearButton');
+const charCounter = document.getElementById('charCounter');
 
 // Initiale Zeit setzen
 document.getElementById('initial-time').textContent = formatTime(new Date());
@@ -18,6 +19,12 @@ userInput.addEventListener('keypress', (e) => {
         e.preventDefault();
         sendMessage();
     }
+});
+
+// Zeichenzähler updaten
+userInput.addEventListener('input', () => {
+    const currentLength = userInput.value.length;
+    charCounter.textContent = `${currentLength}/250`;
 });
 
 // Clear Button
