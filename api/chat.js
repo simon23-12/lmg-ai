@@ -59,7 +59,7 @@ module.exports = async (req, res) => {
         const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
         // Modell-Konfiguration mit Fallback
-        const PRIMARY_MODEL = 'gemini-3-flash';
+        const PRIMARY_MODEL = 'gemini-3-flash-preview'; // Das "-preview" ist hier entscheidend!
         const FALLBACK_MODEL = 'gemini-2.5-flash';
 
         // Baue Chat-Verlauf auf
