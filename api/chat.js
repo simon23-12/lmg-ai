@@ -53,8 +53,10 @@ module.exports = async (req, res) => {
 
         // Initialisiere Google Generative AI
         const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-        // Verwende Gemma 3 Modell (alternativ: 'gemma-3-27b-it' für mehr Leistung)
-        const model = genAI.getGenerativeModel({ model: 'gemma-3-12b-it' });
+
+        // Modell-Konfiguration mit Fallback
+        const PRIMARY_MODEL = 'gemini-3-flash';
+        const FALLBACK_MODEL = 'gemini-2.5-flash';
 
         // Baue Chat-Verlauf auf
         const chatHistory = history?.map(msg => ({
@@ -62,29 +64,48 @@ module.exports = async (req, res) => {
             parts: [{ text: msg.content }]
         })) || [];
 
-        // Starte Chat mit Historie
-        const chat = model.startChat({
-            history: [
-                {
-                    role: 'user',
-                    parts: [{ text: SYSTEM_PROMPT }]
-                },
-                {
-                    role: 'model',
-                    parts: [{ text: 'Verstanden! Ich bin bereit, als Co-Teacher zu helfen.' }]
-                },
-                ...chatHistory
-            ],
-            generationConfig: {
-                maxOutputTokens: 1000,
-                temperature: 0.7,
-            }
-        });
+        // Funktion zum Senden der Nachricht mit einem bestimmten Modell
+        const sendWithModel = async (modelName) => {
+            const model = genAI.getGenerativeModel({ model: modelName });
 
-        // Sende Nachricht
-        const result = await chat.sendMessage(message);
-        const response = result.response;
-        const text = response.text();
+            const chat = model.startChat({
+                history: [
+                    {
+                        role: 'user',
+                        parts: [{ text: SYSTEM_PROMPT }]
+                    },
+                    {
+                        role: 'model',
+                        parts: [{ text: 'Verstanden! Ich bin bereit, als Co-Teacher zu helfen.' }]
+                    },
+                    ...chatHistory
+                ],
+                generationConfig: {
+                    maxOutputTokens: 1000,
+                    temperature: 0.7,
+                }
+            });
+
+            const result = await chat.sendMessage(message);
+            return result.response.text();
+        };
+
+        // Versuche primäres Modell, bei Fehler Fallback
+        let text;
+        try {
+            console.log(`Versuche mit ${PRIMARY_MODEL}...`);
+            text = await sendWithModel(PRIMARY_MODEL);
+        } catch (primaryError) {
+            console.log(`${PRIMARY_MODEL} fehlgeschlagen, wechsle zu ${FALLBACK_MODEL}...`);
+            console.error('Primärer Fehler:', primaryError.message);
+
+            try {
+                text = await sendWithModel(FALLBACK_MODEL);
+            } catch (fallbackError) {
+                console.error('Fallback-Fehler:', fallbackError.message);
+                throw fallbackError; // Wirf den Fehler weiter, wenn beide scheitern
+            }
+        }
 
         return res.status(200).json({ response: text });
 
