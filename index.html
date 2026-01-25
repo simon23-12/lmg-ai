@@ -38,13 +38,16 @@
 
             <!-- Input Area -->
             <div class="input-area">
-                <input
-                    type="text"
-                    id="userInput"
-                    placeholder="Stelle eine Frage oder sende eine Aufgabe..."
-                    autocomplete="off"
-                    maxlength="250"
-                >
+                <div class="input-wrapper">
+                    <input
+                        type="text"
+                        id="userInput"
+                        placeholder="Stelle eine Frage oder sende eine Aufgabe..."
+                        autocomplete="off"
+                        maxlength="250"
+                    >
+                    <span id="charCounter" class="char-counter">0/250</span>
+                </div>
                 <button id="sendButton">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                         <path d="M2 10L18 2L10 18L9 11L2 10Z" fill="currentColor"/>
