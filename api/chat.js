@@ -41,7 +41,9 @@ function isModuleRelatedQuery(message) {
         'pflichtmodul', 'wahlmodul', 'vertiefungsmodul', 'interessenmodul',
         'welche module', 'welches modul', 'was für module',
         'halbjahr', 'jahrgangsstufe', 'klasse',
-        'unterrichtseinheit', 'lerneinheit'
+        'unterrichtseinheit', 'lerneinheit',
+        // Fachbezogene Keywords (Abkürzungen)
+        ' pp ', 'philo', 'philosophie'
     ];
 
     const lowerMessage = message.toLowerCase();
