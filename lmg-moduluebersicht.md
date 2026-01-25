@@ -74,7 +74,9 @@ Informatik Kapitel 3 Vorstellung der Pflichtmodule Jahrgang 5 1. Halbjahr 4 aus 
 
 ## Praktische Philosophie / Lebenskunde
 
+**Gängige Abkürzungen**: PP, Philo, Philosophie
 
+Praktische Philosophie Modulübersicht 5. Klasse 7. Klasse 8. Klasse 9. Klasse 10. Klasse Werkstatt philosophisches Fragen (Produktkoffer - Gallerywalk) Glückstagebuch (Selbstkontrolle) Reisen und Philosophie (wachsende Ausstellung) Begegnungen mit der Weisheit (Ausstellung) Spaziergänge in die Philosophie (Vortrag, Visualisierung, Fachgespräch) Umgang mit dem Tod in den Weltreligionen (Handout + Präsentationen im Unterricht) Der philosophische Podcast (Podcast aufnehmen und hochladen)
 
 
 ---
