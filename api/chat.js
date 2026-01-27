@@ -15,6 +15,24 @@ const MODULE_OVERVIEW_URL = 'https://raw.githubusercontent.com/simon23-12/lmg-ai
 const SCHOOL_INFO_URL = 'https://raw.githubusercontent.com/simon23-12/lmg-ai/main/lmg-schulinformationen.md';
 const CURRICULUM_URL = 'https://raw.githubusercontent.com/simon23-12/lmg-ai/main/Curriculum.md';
 
+// Hilfsfunktion für Fetch mit Timeout (verhindert langsame GitHub-Requests)
+async function fetchWithTimeout(url, timeoutMs = 3000) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+    try {
+        const response = await fetch(url, { signal: controller.signal });
+        clearTimeout(timeout);
+        return response;
+    } catch (error) {
+        clearTimeout(timeout);
+        if (error.name === 'AbortError') {
+            throw new Error(`Fetch timeout nach ${timeoutMs}ms`);
+        }
+        throw error;
+    }
+}
+
 // Funktion zum Laden der Modulübersicht von GitHub
 async function fetchModuleOverview() {
     // Prüfe Cache
@@ -23,7 +41,7 @@ async function fetchModuleOverview() {
     }
 
     try {
-        const response = await fetch(MODULE_OVERVIEW_URL);
+        const response = await fetchWithTimeout(MODULE_OVERVIEW_URL, 3000);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -48,7 +66,7 @@ async function fetchSchoolInfo() {
     }
 
     try {
-        const response = await fetch(SCHOOL_INFO_URL);
+        const response = await fetchWithTimeout(SCHOOL_INFO_URL, 3000);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -73,7 +91,7 @@ async function fetchCurriculum() {
     }
 
     try {
-        const response = await fetch(CURRICULUM_URL);
+        const response = await fetchWithTimeout(CURRICULUM_URL, 3000);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -303,8 +321,8 @@ module.exports = async (req, res) => {
             parts: [{ text: msg.content }]
         })) || [];
 
-        // Funktion zum Senden der Nachricht mit einem bestimmten Modell
-        const sendWithModel = async (modelName) => {
+        // Funktion zum Senden der Nachricht mit einem bestimmten Modell (mit Timeout)
+        const sendWithModel = async (modelName, timeoutMs = 7000) => {
             const model = genAI.getGenerativeModel({ model: modelName });
 
             const chat = model.startChat({
@@ -325,21 +343,28 @@ module.exports = async (req, res) => {
                 }
             });
 
-            const result = await chat.sendMessage(message);
-            return result.response.text();
+            // Promise Race zwischen API-Aufruf und Timeout
+            const timeoutPromise = new Promise((_, reject) =>
+                setTimeout(() => reject(new Error(`Gemini API Timeout nach ${timeoutMs}ms`)), timeoutMs)
+            );
+
+            const resultPromise = chat.sendMessage(message).then(result => result.response.text());
+
+            return Promise.race([resultPromise, timeoutPromise]);
         };
 
         // Versuche primäres Modell, bei Fehler Fallback
+        // Primäres Modell: 7 Sekunden, Fallback: 2 Sekunden (gesamt < 10 Sekunden für Vercel Hobby Plan)
         let text;
         try {
             console.log(`Versuche mit ${PRIMARY_MODEL}...`);
-            text = await sendWithModel(PRIMARY_MODEL);
+            text = await sendWithModel(PRIMARY_MODEL, 7000);
         } catch (primaryError) {
             console.log(`${PRIMARY_MODEL} fehlgeschlagen, wechsle zu ${FALLBACK_MODEL}...`);
             console.error('Primärer Fehler:', primaryError.message);
 
             try {
-                text = await sendWithModel(FALLBACK_MODEL);
+                text = await sendWithModel(FALLBACK_MODEL, 2000);
             } catch (fallbackError) {
                 console.error('Fallback-Fehler:', fallbackError.message);
                 throw fallbackError; // Wirf den Fehler weiter, wenn beide scheitern
