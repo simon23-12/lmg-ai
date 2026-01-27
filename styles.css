@@ -363,22 +363,198 @@ body {
 /* Responsive Design */
 @media (max-width: 768px) {
     body {
-        padding: 10px;
+        padding: 5px;
     }
 
     .container {
-        height: 95vh;
+        height: 98vh;
+        max-width: 100%;
+    }
+
+    .header {
+        padding: 15px 10px;
+        border-radius: 10px 10px 0 0;
+    }
+
+    .header .logo {
+        height: 45px;
+        padding: 8px 15px;
     }
 
     .header h1 {
         font-size: 1.5rem;
+        margin-bottom: 3px;
+    }
+
+    .header p {
+        font-size: 0.85rem;
+    }
+
+    .clear-button, .about-button {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+        left: 10px;
+    }
+
+    .about-button {
+        right: 10px;
+        left: auto;
+    }
+
+    .messages {
+        padding: 15px 10px;
+        gap: 12px;
     }
 
     .message {
-        max-width: 85%;
+        max-width: 90%;
+    }
+
+    .message-content {
+        padding: 10px 14px;
+        font-size: 0.95rem;
+    }
+
+    .input-area {
+        padding: 15px 10px;
+        gap: 8px;
+    }
+
+    #userInput {
+        padding: 10px 14px;
+        font-size: 16px; /* Verhindert Zoom auf iOS */
+        border-radius: 20px;
+    }
+
+    .char-counter {
+        padding: 0 14px;
+        font-size: 0.7rem;
+    }
+
+    #sendButton {
+        padding: 10px 16px;
+        border-radius: 20px;
+        min-width: 50px;
     }
 
     #sendButton span {
-        display: none;
+        display: none; /* Nur Icon auf Mobile */
+    }
+
+    .footer {
+        padding: 10px;
+        border-radius: 0 0 10px 10px;
+    }
+
+    .footer p {
+        font-size: 0.75rem;
+    }
+
+    .timestamp {
+        font-size: 0.7rem;
+    }
+}
+
+/* Extra kleine Bildschirme (Smartphones im Hochformat) */
+@media (max-width: 480px) {
+    body {
+        padding: 0;
+    }
+
+    .container {
+        height: 100vh;
+        border-radius: 0;
+    }
+
+    .header {
+        border-radius: 0;
+        padding: 12px 8px;
+    }
+
+    .header .logo {
+        height: 40px;
+        padding: 6px 12px;
+    }
+
+    .header h1 {
+        font-size: 1.3rem;
+    }
+
+    .header p {
+        font-size: 0.8rem;
+    }
+
+    .clear-button, .about-button {
+        width: 32px;
+        height: 32px;
+        font-size: 18px;
+        left: 8px;
+    }
+
+    .about-button {
+        right: 8px;
+        left: auto;
+    }
+
+    .messages {
+        padding: 12px 8px;
+        gap: 10px;
+    }
+
+    .message {
+        max-width: 92%;
+    }
+
+    .message-content {
+        padding: 9px 12px;
+        font-size: 0.9rem;
+    }
+
+    .input-area {
+        padding: 12px 8px;
+        gap: 6px;
+    }
+
+    #userInput {
+        padding: 9px 12px;
+        font-size: 16px;
+    }
+
+    .char-counter {
+        padding: 0 12px;
+    }
+
+    #sendButton {
+        padding: 9px 14px;
+        min-width: 45px;
+    }
+
+    .footer {
+        border-radius: 0;
+        padding: 8px;
+    }
+
+    .footer p {
+        font-size: 0.7rem;
+    }
+}
+
+/* Landscape Modus für Tablets */
+@media (max-width: 1024px) and (orientation: landscape) {
+    .container {
+        height: 96vh;
+    }
+
+    .header {
+        padding: 15px;
+    }
+
+    .header .logo {
+        height: 50px;
+    }
+
+    .messages {
+        padding: 15px;
     }
 }
