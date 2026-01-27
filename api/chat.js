@@ -123,6 +123,7 @@ function isSchoolInfoRelatedQuery(message) {
         'krankmeldung', 'krank melden',
         'tag der offenen tür', 'aufnahme', 'anmeldung',
         'kontakt', 'telefon', 'email',
+        'website', 'webseite', 'homepage', 'internetseite', 'url', 'link',
         'lmg engagiert', 'ehrenamt',
         'chor', 'orchester', 'musical', 'theater',
         'sportfest', 'stadtmeisterschaft',
@@ -155,6 +156,10 @@ function isCurriculumRelatedQuery(message) {
 
 // System Prompt für LMG AI
 const BASE_SYSTEM_PROMPT = `Du bist die hausinterne künstliche Intelligenz des Leibniz-Montessori-Gymnasiums. Du unterstützt Schülerinnen und Schüler sowie deren Eltern bei schulrelevanten Themen und Fragen zur Schule.
+
+WICHTIG - SCHULWEBSITE:
+Die offizielle Website der Schule ist AUSSCHLIESSLICH: https://www.leibniz-montessori.de/
+NIEMALS andere URLs nennen oder erfinden! Nenne nur diese exakte URL.
 
 WICHTIG - NUR SCHULTHEMEN:
 - Du beantwortest NUR Fragen zu schulrelevanten Themen (Mathematik, Deutsch, Englisch, Naturwissenschaften, Geschichte, etc.) und Fragen zur Schulorganisation
