@@ -655,7 +655,11 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
                 'gemini-2.5-flash-lite'    // Fallback: schnellstes Modell
             ];
 
+        // Erkenne ob es ein PDF ist (braucht längere Timeouts)
+        const isPDF = hasFile && file.type === 'application/pdf';
+
         console.log(`Datei-Upload: ${hasFile ? 'Ja (' + file.type + ')' : 'Nein'}`);
+        console.log(`PDF-Dokument: ${isPDF ? 'Ja' : 'Nein'}`);
         console.log(`Modell-Reihenfolge: ${MODELS.join(' → ')}`);
 
         // Baue Chat-Verlauf auf
@@ -685,7 +689,8 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
                             data: base64Data
                         }
                     });
-                    console.log(`Bild hinzugefügt: ${mimeType}, ${Math.round(base64Data.length / 1024)}KB`);
+                    const fileType = mimeType.includes('pdf') ? 'PDF-Dokument' : 'Bild';
+                    console.log(`${fileType} hinzugefügt: ${mimeType}, ${Math.round(base64Data.length / 1024)}KB`);
                 }
             }
 
@@ -720,11 +725,13 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
             return Promise.race([resultPromise, timeoutPromise]);
         };
 
-        // Timeouts pro Modell (maxDuration ist jetzt 30s in vercel.json)
-        // Mit Frontend-Bildkomprimierung sind Uploads jetzt ~100-300KB
+        // Timeouts pro Modell (maxDuration ist jetzt 60s in vercel.json)
+        // PDFs brauchen deutlich länger als komprimierte Bilder
         const MODEL_TIMEOUTS = hasFile
-            ? [20000, 8000]       // 2.5-Pro (20s) → 2.5-Flash (8s) = 28s total
-            : [12000, 8000];      // 2.5-Flash (12s) → 2.5-Flash-Lite (8s) = 20s total
+            ? (isPDF
+                ? [35000, 15000]  // PDFs: 2.5-Pro (35s) → 2.5-Flash (15s) = 50s total
+                : [20000, 10000]) // Bilder: 2.5-Pro (20s) → 2.5-Flash (10s) = 30s total
+            : [12000, 8000];      // Text-only: 2.5-Flash (12s) → 2.5-Flash-Lite (8s) = 20s total
 
         // Funktion zum Durchlaufen aller Modelle
         const tryAllModels = async () => {
@@ -748,9 +755,11 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
             throw lastError;
         };
 
-        // Mit Frontend-Bildkomprimierung reicht 1 Versuch (Bilder sind jetzt ~300-500KB)
-        // Timeouts sind länger, daher kein Retry nötig
-        const MAX_RETRIES = 1;
+        // Bei Datei-Uploads 2 Versuche (API kann bei Dokumenten instabil sein)
+        // Bei Text-only reicht 1 Versuch
+        const MAX_RETRIES = hasFile ? 2 : 1;
+        console.log(`Timeouts: ${MODEL_TIMEOUTS.join('ms → ')}ms | Max Versuche: ${MAX_RETRIES}`);
+
         let text;
         let lastError = null;
 
