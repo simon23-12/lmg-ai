@@ -38,13 +38,15 @@ function detectGradeLevel(message) {
     const lowerMessage = message.toLowerCase();
 
     // Suche nach "klasse 5", "5. klasse", "jahrgang 5", "stufe 5", etc.
+    // Inkludiert Tippfehler-Varianten wie "klase", "klass"
     const gradePatterns = [
-        /klasse\s*(\d+)/,
-        /(\d+)\.\s*klasse/,
+        /klass?e?\s*(\d+)/,          // "klasse 5", "klase 5", "klass 5"
+        /(\d+)\.\s*klass?e?/,        // "5. klasse", "5. klase", "5. klass"
         /jahrgang\s*(\d+)/,
         /stufe\s*(\d+)/,
         /jahrgangsstufe\s*(\d+)/,
-        /\b(\d+)\s*er\b/  // z.B. "5er"
+        /\b(\d+)\s*er\b/,            // z.B. "5er"
+        /\b(\d+)\.\s*(?=halbjahr)/   // "8. Halbjahr" -> extrahiert 8
     ];
 
     for (const pattern of gradePatterns) {
@@ -363,8 +365,12 @@ module.exports = async (req, res) => {
 
         // Prüfe welche Kontexte benötigt werden
         const needsModuleInfo = isModuleRelatedQuery(message);
-        const needsSchoolInfo = isSchoolInfoRelatedQuery(message);
         const needsCurriculum = isCurriculumRelatedQuery(message);
+
+        // Schulinfo nur laden wenn NICHT primär eine Modul-Anfrage ist
+        // (verhindert unnötiges Laden bei Fragen wie "8. Klasse Englisch Modul")
+        const isExplicitModuleQuery = /modul/i.test(message);
+        const needsSchoolInfo = isSchoolInfoRelatedQuery(message) && !isExplicitModuleQuery;
 
         // Erkenne Jahrgangsstufe für Modulabfragen
         let detectedGrade = null;
@@ -449,17 +455,17 @@ module.exports = async (req, res) => {
         };
 
         // Versuche primäres Modell, bei Fehler Fallback
-        // Primäres Modell: 7 Sekunden, Fallback: 2 Sekunden (gesamt < 10 Sekunden für Vercel Hobby Plan)
+        // Primäres Modell: 5 Sekunden, Fallback: 4 Sekunden (gesamt < 10 Sekunden für Vercel Hobby Plan)
         let text;
         try {
             console.log(`Versuche mit ${PRIMARY_MODEL}...`);
-            text = await sendWithModel(PRIMARY_MODEL, 7000);
+            text = await sendWithModel(PRIMARY_MODEL, 5000);
         } catch (primaryError) {
             console.log(`${PRIMARY_MODEL} fehlgeschlagen, wechsle zu ${FALLBACK_MODEL}...`);
             console.error('Primärer Fehler:', primaryError.message);
 
             try {
-                text = await sendWithModel(FALLBACK_MODEL, 2000);
+                text = await sendWithModel(FALLBACK_MODEL, 4000);
             } catch (fallbackError) {
                 console.error('Fallback-Fehler:', fallbackError.message);
                 throw fallbackError; // Wirf den Fehler weiter, wenn beide scheitern
