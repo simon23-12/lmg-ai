@@ -570,12 +570,19 @@ module.exports = async (req, res) => {
             const imageInstructions = `
 
 WICHTIG - BILD/DOKUMENT-ANALYSE:
-Der Schüler hat ein Bild oder Dokument hochgeladen. Analysiere es im schulischen Kontext:
+Der Schüler hat ein Bild oder Dokument hochgeladen.
+
+KRITISCH - KEINE HALLUZINATIONEN:
+1. Schau GENAU hin, was im Bild zu sehen ist - welches Fach, welches Thema?
+2. Beschreibe kurz, was du erkennst (z.B. "Ich sehe ein Arbeitsblatt zum Thema Auge/Biologie...")
+3. Erfinde NIEMALS Inhalte, die nicht klar sichtbar sind
+4. Wenn das Bild unscharf ist oder du unsicher bist, frage nach: "Ich kann das Bild nicht gut erkennen. Kannst du mir sagen, um welches Fach/Thema es geht?"
+
+Erst NACHDEM du das Thema korrekt identifiziert hast:
 - Bei Arbeitsblättern: Erkläre die Aufgaben und gib Hilfestellung (keine fertigen Lösungen)
 - Bei Mathe-Aufgaben: Zeige den Lösungsweg Schritt für Schritt
-- Bei Texten/Aufsätzen: Gib konstruktives Feedback zu Grammatik, Struktur und Inhalt
+- Bei Texten/Aufsätzen: Gib konstruktives Feedback
 - Bei Diagrammen/Grafiken: Erkläre, was dargestellt wird
-- Bei Fotos von Schulaufgaben: Hilf beim Verständnis des Materials
 
 Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
             systemPrompt += imageInstructions;
