@@ -458,9 +458,13 @@ module.exports = async (req, res) => {
         // Initialisiere Google Generative AI
         const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
-        // Modell-Konfiguration mit Fallback
-        const PRIMARY_MODEL = 'gemini-3-flash-preview'; // Das "-preview" ist hier entscheidend!
-        const FALLBACK_MODEL = 'gemini-2.5-flash';
+        // Modell-Konfiguration mit Fallbacks (4 Modelle in Prioritätsreihenfolge)
+        const MODELS = [
+            'gemini-3-flash-preview',  // Primär: schnellstes Modell
+            'gemini-2.5-flash',        // Fallback 1: schnelles Modell
+            'gemini-3-pro',            // Fallback 2: Pro-Modell
+            'gemini-2.5-pro'           // Fallback 3: stabiles Pro-Modell
+        ];
 
         // Baue Chat-Verlauf auf
         const chatHistory = history?.map(msg => ({
@@ -500,31 +504,69 @@ module.exports = async (req, res) => {
             return Promise.race([resultPromise, timeoutPromise]);
         };
 
-        // Versuche primäres Modell, bei Fehler Fallback
-        // Primäres Modell: 5 Sekunden, Fallback: 4 Sekunden (gesamt < 10 Sekunden für Vercel Hobby Plan)
-        let text;
-        try {
-            console.log(`Versuche mit ${PRIMARY_MODEL}...`);
-            text = await sendWithModel(PRIMARY_MODEL, 5000);
-        } catch (primaryError) {
-            console.log(`${PRIMARY_MODEL} fehlgeschlagen, wechsle zu ${FALLBACK_MODEL}...`);
-            console.error('Primärer Fehler:', primaryError.message);
+        // Timeouts pro Modell (kürzere Timeouts für schnellere Fallbacks)
+        const MODEL_TIMEOUTS = [4000, 3500, 3000, 2500];
 
+        // Funktion zum Durchlaufen aller Modelle
+        const tryAllModels = async () => {
+            let lastError = null;
+
+            for (let i = 0; i < MODELS.length; i++) {
+                const modelName = MODELS[i];
+                const timeout = MODEL_TIMEOUTS[i];
+
+                try {
+                    console.log(`Versuche mit ${modelName} (Timeout: ${timeout}ms)...`);
+                    return await sendWithModel(modelName, timeout);
+                } catch (error) {
+                    console.log(`${modelName} fehlgeschlagen: ${error.message}`);
+                    lastError = error;
+                    // Weiter zum nächsten Modell
+                }
+            }
+
+            // Alle Modelle fehlgeschlagen
+            throw lastError;
+        };
+
+        // Exponential Backoff: 2 Versuche mit allen Modellen
+        const MAX_RETRIES = 2;
+        let text;
+        let lastError = null;
+
+        for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
             try {
-                text = await sendWithModel(FALLBACK_MODEL, 4000);
-            } catch (fallbackError) {
-                console.error('Fallback-Fehler:', fallbackError.message);
-                throw fallbackError; // Wirf den Fehler weiter, wenn beide scheitern
+                console.log(`=== Versuch ${attempt}/${MAX_RETRIES} ===`);
+                text = await tryAllModels();
+                break; // Erfolg, Schleife verlassen
+            } catch (error) {
+                lastError = error;
+                console.error(`Alle Modelle fehlgeschlagen in Versuch ${attempt}:`, error.message);
+
+                if (attempt < MAX_RETRIES) {
+                    // Exponential Backoff: 1 Sekunde beim ersten Retry
+                    const backoffMs = 1000 * attempt;
+                    console.log(`Warte ${backoffMs}ms vor nächstem Versuch...`);
+                    await new Promise(resolve => setTimeout(resolve, backoffMs));
+                }
             }
         }
 
-        return res.status(200).json({ response: text });
+        // Prüfe ob erfolgreich
+        if (text) {
+            return res.status(200).json({ response: text });
+        }
+
+        // Alle Versuche fehlgeschlagen
+        console.error('Alle Modelle und Retries erschöpft:', lastError?.message);
+        return res.status(503).json({
+            error: 'Die KI hat gerade viel zu tun, bitte versuche es in ein paar Minuten wieder.'
+        });
 
     } catch (error) {
         console.error('Fehler bei der API-Anfrage:', error);
         return res.status(500).json({
-            error: 'Fehler bei der Verarbeitung der Anfrage',
-            details: error.message
+            error: 'Die KI hat gerade viel zu tun, bitte versuche es in ein paar Minuten wieder.'
         });
     }
 };
