@@ -375,7 +375,21 @@ module.exports = async (req, res) => {
         // Erkenne Jahrgangsstufe für Modulabfragen
         let detectedGrade = null;
         if (needsModuleInfo) {
+            // Zuerst in aktueller Nachricht suchen
             detectedGrade = detectGradeLevel(message);
+
+            // Falls nicht gefunden, im Chat-Verlauf suchen (neueste zuerst)
+            if (!detectedGrade && history && history.length > 0) {
+                for (let i = history.length - 1; i >= 0; i--) {
+                    const historyGrade = detectGradeLevel(history[i].content);
+                    if (historyGrade) {
+                        detectedGrade = historyGrade;
+                        console.log(`Jahrgangsstufe aus Chat-Verlauf erkannt: ${detectedGrade}`);
+                        break;
+                    }
+                }
+            }
+
             console.log(`Erkannte Jahrgangsstufe: ${detectedGrade || 'keine'}`);
         }
 
