@@ -561,6 +561,26 @@ module.exports = async (req, res) => {
         const isExplicitModuleQuery = /modul/i.test(message);
         const needsSchoolInfo = isSchoolInfoRelatedQuery(message) && !isExplicitModuleQuery;
 
+        // Prüfe ob eine Datei hochgeladen wurde
+        const { file } = req.body;
+        const hasFile = file && file.data;
+
+        // Füge Bild-Analyse-Anweisung hinzu wenn nötig
+        if (hasFile) {
+            const imageInstructions = `
+
+WICHTIG - BILD/DOKUMENT-ANALYSE:
+Der Schüler hat ein Bild oder Dokument hochgeladen. Analysiere es im schulischen Kontext:
+- Bei Arbeitsblättern: Erkläre die Aufgaben und gib Hilfestellung (keine fertigen Lösungen)
+- Bei Mathe-Aufgaben: Zeige den Lösungsweg Schritt für Schritt
+- Bei Texten/Aufsätzen: Gib konstruktives Feedback zu Grammatik, Struktur und Inhalt
+- Bei Diagrammen/Grafiken: Erkläre, was dargestellt wird
+- Bei Fotos von Schulaufgaben: Hilf beim Verständnis des Materials
+
+Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
+            systemPrompt += imageInstructions;
+        }
+
         // Erkenne Jahrgangsstufe für Modulabfragen
         let detectedGrade = null;
         if (needsModuleInfo) {
@@ -615,12 +635,22 @@ module.exports = async (req, res) => {
         // Initialisiere Google Generative AI
         const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
-        // Modell-Konfiguration mit Fallbacks (2 Modelle für Vercel 10s Limit)
-        // Gesamtzeit muss unter 10s bleiben: 2 Modelle × 4s = 8s max
-        const MODELS = [
-            'gemini-2.5-flash',        // Primär: stabiles, schnelles Modell
-            'gemini-2.5-flash-lite'    // Fallback: noch schneller, günstiger
-        ];
+        // Modell-Konfiguration mit Fallbacks
+        // Bei Datei-Upload: Pro-Modelle zuerst (besser für Bildanalyse)
+        // Bei Text-only: Flash-Modelle (schneller, günstiger)
+        const MODELS = hasFile
+            ? [
+                'gemini-2.5-pro',          // Primär bei Uploads: Pro-Modell für beste Bildanalyse
+                'gemini-2.5-flash',        // Fallback 1: schnelles, fähiges Modell
+                'gemini-2.5-flash-lite'    // Fallback 2: schnellstes Modell
+            ]
+            : [
+                'gemini-2.5-flash',        // Primär: stabiles, schnelles Modell
+                'gemini-2.5-flash-lite'    // Fallback: noch schneller, günstiger
+            ];
+
+        console.log(`Datei-Upload: ${hasFile ? 'Ja (' + file.type + ')' : 'Nein'}`);
+        console.log(`Modell-Reihenfolge: ${MODELS.join(' → ')}`);
 
         // Baue Chat-Verlauf auf
         const chatHistory = history?.map(msg => ({
@@ -631,6 +661,30 @@ module.exports = async (req, res) => {
         // Funktion zum Senden der Nachricht mit einem bestimmten Modell (mit Timeout)
         const sendWithModel = async (modelName, timeoutMs = 7000) => {
             const model = genAI.getGenerativeModel({ model: modelName });
+
+            // Bereite die Nachricht vor (Text + optional Bild)
+            let messageParts = [];
+
+            // Wenn eine Datei vorhanden ist, diese als multimodalen Content hinzufügen
+            if (hasFile && file.data) {
+                // Base64-Daten extrahieren (Format: data:image/jpeg;base64,XXXX)
+                const base64Match = file.data.match(/^data:([^;]+);base64,(.+)$/);
+                if (base64Match) {
+                    const mimeType = base64Match[1];
+                    const base64Data = base64Match[2];
+
+                    messageParts.push({
+                        inlineData: {
+                            mimeType: mimeType,
+                            data: base64Data
+                        }
+                    });
+                    console.log(`Bild hinzugefügt: ${mimeType}, ${Math.round(base64Data.length / 1024)}KB`);
+                }
+            }
+
+            // Text-Nachricht hinzufügen
+            messageParts.push({ text: message });
 
             const chat = model.startChat({
                 history: [
@@ -655,13 +709,16 @@ module.exports = async (req, res) => {
                 setTimeout(() => reject(new Error(`Gemini API Timeout nach ${timeoutMs}ms`)), timeoutMs)
             );
 
-            const resultPromise = chat.sendMessage(message).then(result => result.response.text());
+            const resultPromise = chat.sendMessage(messageParts).then(result => result.response.text());
 
             return Promise.race([resultPromise, timeoutPromise]);
         };
 
         // Timeouts pro Modell (muss in Summe unter 10s Vercel-Limit bleiben)
-        const MODEL_TIMEOUTS = [5000, 4000];
+        // Bei Uploads: Pro hat mehr Zeit, aber weniger Fallbacks möglich
+        const MODEL_TIMEOUTS = hasFile
+            ? [4000, 3000, 2000]  // Pro → Flash → Lite (total: 9s max)
+            : [5000, 4000];       // Flash → Lite (total: 9s max)
 
         // Funktion zum Durchlaufen aller Modelle
         const tryAllModels = async () => {
