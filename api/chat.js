@@ -194,7 +194,7 @@ async function fetchCurriculum() {
 }
 
 // Funktion zum Prüfen, ob eine Nachricht Modul-bezogen ist
-function isModuleRelatedQuery(message) {
+function isModuleRelatedQuery(message, history = []) {
     const moduleKeywords = [
         'modul', 'module', 'modulübersicht',
         'pflichtmodul', 'wahlmodul', 'vertiefungsmodul', 'interessenmodul',
@@ -202,11 +202,43 @@ function isModuleRelatedQuery(message) {
         'halbjahr', 'jahrgangsstufe', 'klasse',
         'unterrichtseinheit', 'lerneinheit',
         // Fachbezogene Keywords (Abkürzungen)
-        ' pp ', 'philo', 'philosophie'
+        ' pp ', 'philo', 'philosophie',
+        // Zeitraum/Fristen-bezogene Keywords
+        'frist', 'fristen', 'abgabe', 'abgabefrist', 'deadline',
+        'zeitraum', 'wann muss', 'bis wann'
+    ];
+
+    // Follow-up Keywords die auf vorherige Fragen verweisen
+    const followUpKeywords = [
+        'dafür', 'davon', 'dazu', 'dabei', 'damit',
+        'diese', 'dieser', 'dieses',
+        'wie lange', 'wann'
     ];
 
     const lowerMessage = message.toLowerCase();
-    return moduleKeywords.some(keyword => lowerMessage.includes(keyword));
+
+    // Direkte Modul-Anfrage
+    if (moduleKeywords.some(keyword => lowerMessage.includes(keyword))) {
+        return true;
+    }
+
+    // Follow-up Frage: Prüfe ob vorherige Nachricht Modul-bezogen war
+    if (history && history.length > 0) {
+        const hasFollowUpKeyword = followUpKeywords.some(keyword => lowerMessage.includes(keyword));
+        if (hasFollowUpKeyword) {
+            // Prüfe die letzten 4 Nachrichten auf Modul-Bezug (nur die Keywords, ohne history-Rekursion)
+            const recentHistory = history.slice(-4);
+            for (const msg of recentHistory) {
+                const lowerContent = msg.content.toLowerCase();
+                if (moduleKeywords.some(keyword => lowerContent.includes(keyword))) {
+                    console.log('Follow-up Frage zu Modul-Thema erkannt');
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
 }
 
 // Funktion zum Prüfen, ob eine Nachricht schulinfo-bezogen ist
@@ -363,8 +395,8 @@ module.exports = async (req, res) => {
         // Prüfe ob zusätzliche Kontextinformationen benötigt werden
         let systemPrompt = BASE_SYSTEM_PROMPT;
 
-        // Prüfe welche Kontexte benötigt werden
-        const needsModuleInfo = isModuleRelatedQuery(message);
+        // Prüfe welche Kontexte benötigt werden (mit history für Follow-up Erkennung)
+        const needsModuleInfo = isModuleRelatedQuery(message, history);
         const needsCurriculum = isCurriculumRelatedQuery(message);
 
         // Schulinfo nur laden wenn NICHT primär eine Modul-Anfrage ist
