@@ -11,7 +11,7 @@ let curriculumCacheTimestamp = null;
 const CACHE_DURATION = 3600000; // 1 Stunde in Millisekunden
 
 // GitHub Raw URLs
-const MODULE_OVERVIEW_URL = 'https://raw.githubusercontent.com/simon23-12/lmg-ai/main/lmg-moduluebersicht.md';
+const MODULE_OVERVIEW_BASE_URL = 'https://raw.githubusercontent.com/simon23-12/lmg-ai/main/moduluebersicht-';
 const SCHOOL_INFO_URL = 'https://raw.githubusercontent.com/simon23-12/lmg-ai/main/lmg-schulinformationen.md';
 const CURRICULUM_URL = 'https://raw.githubusercontent.com/simon23-12/lmg-ai/main/Curriculum.md';
 
@@ -33,29 +33,112 @@ async function fetchWithTimeout(url, timeoutMs = 3000) {
     }
 }
 
+// Funktion zur Erkennung der Jahrgangsstufe aus der Nachricht
+function detectGradeLevel(message) {
+    const lowerMessage = message.toLowerCase();
+
+    // Suche nach "klasse 5", "5. klasse", "jahrgang 5", "stufe 5", etc.
+    const gradePatterns = [
+        /klasse\s*(\d+)/,
+        /(\d+)\.\s*klasse/,
+        /jahrgang\s*(\d+)/,
+        /stufe\s*(\d+)/,
+        /jahrgangsstufe\s*(\d+)/,
+        /\b(\d+)\s*er\b/  // z.B. "5er"
+    ];
+
+    for (const pattern of gradePatterns) {
+        const match = lowerMessage.match(pattern);
+        if (match) {
+            const grade = parseInt(match[1]);
+            // Nur Klassen 5-10 sind verfügbar
+            if (grade >= 5 && grade <= 10) {
+                return grade;
+            }
+        }
+    }
+
+    return null; // Keine Jahrgangsstufe gefunden
+}
+
 // Funktion zum Laden der Modulübersicht von GitHub
-async function fetchModuleOverview() {
-    // Prüfe Cache
-    if (moduleOverviewCache && moduleOverviewCacheTimestamp && (Date.now() - moduleOverviewCacheTimestamp) < CACHE_DURATION) {
-        return moduleOverviewCache;
+async function fetchModuleOverview(grade) {
+    // Wenn keine Jahrgangsstufe angegeben, können wir nichts laden
+    if (!grade || grade < 5 || grade > 10) {
+        console.log('Keine gültige Jahrgangsstufe für Modulübersicht gefunden');
+        return null;
+    }
+
+    // Prüfe Cache für diese spezifische Jahrgangsstufe
+    const cacheKey = `grade_${grade}`;
+    if (moduleOverviewCache && moduleOverviewCache[cacheKey] &&
+        moduleOverviewCacheTimestamp && (Date.now() - moduleOverviewCacheTimestamp) < CACHE_DURATION) {
+        return moduleOverviewCache[cacheKey];
     }
 
     try {
-        const response = await fetchWithTimeout(MODULE_OVERVIEW_URL, 3000);
+        const url = `${MODULE_OVERVIEW_BASE_URL}${grade}.json`;
+        console.log(`Lade Modulübersicht für Klasse ${grade} von: ${url}`);
+
+        const response = await fetchWithTimeout(url, 3000);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const text = await response.text();
+        const jsonData = await response.json();
 
-        // Cache aktualisieren
-        moduleOverviewCache = text;
+        // Formatiere JSON in lesbaren Text für die KI
+        const formattedText = formatModuleDataForAI(jsonData);
+
+        // Cache aktualisieren (mit Dictionary für verschiedene Jahrgangsstufen)
+        if (!moduleOverviewCache) {
+            moduleOverviewCache = {};
+        }
+        moduleOverviewCache[cacheKey] = formattedText;
         moduleOverviewCacheTimestamp = Date.now();
 
-        return text;
+        return formattedText;
     } catch (error) {
-        console.error('Fehler beim Laden der Modulübersicht:', error);
+        console.error(`Fehler beim Laden der Modulübersicht für Klasse ${grade}:`, error);
         return null;
     }
+}
+
+// Hilfsfunktion zum Formatieren der JSON-Daten in lesbaren Text
+function formatModuleDataForAI(jsonData) {
+    let text = `# Modulübersicht Klasse ${jsonData.jahrgang}\n`;
+    text += `Schuljahr: ${jsonData.schuljahr}\n\n`;
+    text += `Abgabefristen:\n`;
+    text += `- 1. Halbjahr: ${jsonData.abgabefrist_1hj}\n`;
+    text += `- 2. Halbjahr: ${jsonData.abgabefrist_2hj}\n\n`;
+
+    // Beide Halbjahre durchgehen
+    for (const [halbjahrNr, halbjahr] of Object.entries(jsonData.halbjahre)) {
+        text += `## ${halbjahr.bezeichnung}\n\n`;
+
+        // Alle Fächer durchgehen
+        for (const [fachKuerzel, fach] of Object.entries(halbjahr.faecher)) {
+            text += `### ${fach.fachname} (${fachKuerzel})\n\n`;
+
+            // Alle Module durchgehen
+            if (fach.module && fach.module.length > 0) {
+                for (const modul of fach.module) {
+                    text += `**${modul.name}**\n`;
+                    text += `- Sozialform: ${modul.sozialform}\n`;
+                    text += `- Zeitraum: ${modul.zeitraum}\n`;
+                    text += `- Dauer: ${modul.dauer} ${modul.dauer_einheit}\n`;
+                    text += `- Ergebnis: ${modul.ergebnis}\n`;
+                    if (modul.hinweise && modul.hinweise.length > 0) {
+                        text += `- Hinweise: ${modul.hinweise.join(', ')}\n`;
+                    }
+                    text += `\n`;
+                }
+            } else {
+                text += `Keine Module vorhanden.\n\n`;
+            }
+        }
+    }
+
+    return text;
 }
 
 // Funktion zum Laden der Schulinformationen von GitHub
@@ -203,12 +286,14 @@ Antworte auf Deutsch und sei freundlich und unterstützend.`;
 const MODULE_CONTEXT_ADDITION = `
 
 WICHTIG - MODULÜBERSICHT:
-Du hast Zugriff auf die vollständige Modulübersicht des LMG für alle Fächer und Jahrgangsstufen.
+Du hast Zugriff auf die vollständige Modulübersicht des LMG für die Jahrgangsstufen 5-10.
 Wenn Schüler nach Modulen fragen, nutze diese Informationen um:
-- Module für bestimmte Fächer und Jahrgangsstufen zu empfehlen
-- Inhalte und Themen von Modulen zu erklären
-- Zeitaufwand und Sozialformen zu nennen
-- Zwischen Pflicht-, Übungs-, Vertiefungs- und Interessenmodulen zu unterscheiden
+- Module für bestimmte Fächer und Jahrgangsstufen zu nennen
+- Inhalte, Zeitaufwand, Sozialformen und Ergebnisse von Modulen zu erklären
+- Hinweise zu Fachraumpflicht oder benötigten digitalen Endgeräten zu geben
+- Abgabefristen zu nennen (1. Halbjahr: letzter Schultag vor Weihnachtsferien, 2. Halbjahr: siehe Modulübersicht)
+
+WICHTIG: Wenn nach Modulen gefragt wird, aber keine Jahrgangsstufe (Klasse 5-10) genannt wurde, frage nach der Klassenstufe, damit du die richtigen Module anzeigen kannst.
 
 Modulübersicht:
 {MODULE_OVERVIEW}`;
@@ -281,10 +366,17 @@ module.exports = async (req, res) => {
         const needsSchoolInfo = isSchoolInfoRelatedQuery(message);
         const needsCurriculum = isCurriculumRelatedQuery(message);
 
+        // Erkenne Jahrgangsstufe für Modulabfragen
+        let detectedGrade = null;
+        if (needsModuleInfo) {
+            detectedGrade = detectGradeLevel(message);
+            console.log(`Erkannte Jahrgangsstufe: ${detectedGrade || 'keine'}`);
+        }
+
         // Lade benötigte Informationen parallel
         if (needsModuleInfo || needsSchoolInfo || needsCurriculum) {
             const [moduleOverview, schoolInfo, curriculum] = await Promise.all([
-                needsModuleInfo ? fetchModuleOverview() : Promise.resolve(null),
+                needsModuleInfo && detectedGrade ? fetchModuleOverview(detectedGrade) : Promise.resolve(null),
                 needsSchoolInfo ? fetchSchoolInfo() : Promise.resolve(null),
                 needsCurriculum ? fetchCurriculum() : Promise.resolve(null)
             ]);
@@ -292,7 +384,10 @@ module.exports = async (req, res) => {
             // Füge Modulübersicht hinzu
             if (moduleOverview) {
                 systemPrompt += MODULE_CONTEXT_ADDITION.replace('{MODULE_OVERVIEW}', moduleOverview);
-                console.log('Modulübersicht geladen und zum System Prompt hinzugefügt');
+                console.log(`Modulübersicht für Klasse ${detectedGrade} geladen und zum System Prompt hinzugefügt`);
+            } else if (needsModuleInfo && !detectedGrade) {
+                // Falls Module erwähnt werden, aber keine Jahrgangsstufe erkannt wurde
+                console.log('Modulabfrage erkannt, aber keine Jahrgangsstufe gefunden');
             }
 
             // Füge Schulinformationen hinzu
