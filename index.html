@@ -36,7 +36,23 @@
 
             <!-- Input Area -->
             <div class="input-area">
+                <!-- Hidden File Input -->
+                <input type="file" id="fileInput" accept="image/*,.pdf,.doc,.docx,.txt" style="display: none;">
+
+                <!-- Upload Button -->
+                <button id="uploadButton" class="upload-button" title="Bild oder Dokument hochladen">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/>
+                    </svg>
+                </button>
+
                 <div class="input-wrapper">
+                    <!-- File Preview -->
+                    <div id="filePreview" class="file-preview" style="display: none;">
+                        <img id="previewImage" src="" alt="Vorschau">
+                        <div id="previewFileName" class="preview-file-name"></div>
+                        <button id="removeFile" class="remove-file" title="Datei entfernen">✕</button>
+                    </div>
                     <input
                         type="text"
                         id="userInput"
