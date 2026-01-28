@@ -15,6 +15,71 @@ const MODULE_OVERVIEW_BASE_URL = 'https://raw.githubusercontent.com/simon23-12/l
 const SCHOOL_INFO_URL = 'https://raw.githubusercontent.com/simon23-12/lmg-ai/main/lmg-schulinformationen.md';
 const CURRICULUM_URL = 'https://raw.githubusercontent.com/simon23-12/lmg-ai/main/Curriculum.md';
 
+// Levenshtein-Distanz: Misst wie viele Buchstaben geändert werden müssen
+// um von einem Wort zum anderen zu kommen (für Tippfehler-Toleranz)
+function levenshteinDistance(a, b) {
+    if (a.length === 0) return b.length;
+    if (b.length === 0) return a.length;
+
+    const matrix = [];
+
+    for (let i = 0; i <= b.length; i++) {
+        matrix[i] = [i];
+    }
+    for (let j = 0; j <= a.length; j++) {
+        matrix[0][j] = j;
+    }
+
+    for (let i = 1; i <= b.length; i++) {
+        for (let j = 1; j <= a.length; j++) {
+            if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                matrix[i][j] = matrix[i - 1][j - 1];
+            } else {
+                matrix[i][j] = Math.min(
+                    matrix[i - 1][j - 1] + 1, // Ersetzung
+                    matrix[i][j - 1] + 1,     // Einfügung
+                    matrix[i - 1][j] + 1      // Löschung
+                );
+            }
+        }
+    }
+
+    return matrix[b.length][a.length];
+}
+
+// Prüft ob ein Wort "ähnlich genug" zu einem Keyword ist
+// Erlaubt max. 2 Fehler bei Wörtern mit 5+ Buchstaben, 1 Fehler bei kürzeren
+function fuzzyMatch(word, keyword) {
+    const maxDistance = keyword.length >= 5 ? 2 : 1;
+    return levenshteinDistance(word, keyword) <= maxDistance;
+}
+
+// Prüft ob die Nachricht ein Keyword enthält (mit Tippfehler-Toleranz)
+function fuzzyContains(message, keyword) {
+    const lowerMessage = message.toLowerCase();
+    const lowerKeyword = keyword.toLowerCase();
+
+    // Erst exakten Match versuchen (schneller)
+    if (lowerMessage.includes(lowerKeyword)) {
+        return true;
+    }
+
+    // Bei kurzen Keywords (< 4 Zeichen) kein Fuzzy-Matching (zu viele false positives)
+    if (lowerKeyword.length < 4) {
+        return false;
+    }
+
+    // Nachricht in Wörter aufteilen und jedes prüfen
+    const words = lowerMessage.split(/\s+/);
+    for (const word of words) {
+        if (fuzzyMatch(word, lowerKeyword)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 // Hilfsfunktion für Fetch mit Timeout (verhindert langsame GitHub-Requests)
 async function fetchWithTimeout(url, timeoutMs = 3000) {
     const controller = new AbortController();
@@ -178,23 +243,45 @@ const LANGUAGE_NAMES = {
 function detectGradeLevel(message) {
     const lowerMessage = message.toLowerCase();
 
-    // Suche nach "klasse 5", "5. klasse", "jahrgang 5", "stufe 5", etc.
-    // Inkludiert Tippfehler-Varianten wie "klase", "klass"
-    const gradePatterns = [
-        /klass?e?\s*(\d+)/,          // "klasse 5", "klase 5", "klass 5"
-        /(\d+)\.\s*klass?e?/,        // "5. klasse", "5. klase", "5. klass"
-        /jahrgang\s*(\d+)/,
-        /stufe\s*(\d+)/,
-        /jahrgangsstufe\s*(\d+)/,
+    // Keywords die auf eine Klassenstufe hindeuten (mit Tippfehler-Toleranz)
+    const gradeKeywords = ['klasse', 'jahrgang', 'stufe', 'jahrgangsstufe'];
+
+    // Pattern 1: "Wort + Zahl" (z.B. "klasse 9", "kalsse 9")
+    const wordThenNumber = /(\w+)\s+(\d+)/g;
+    let match;
+    while ((match = wordThenNumber.exec(lowerMessage)) !== null) {
+        const word = match[1];
+        const num = parseInt(match[2]);
+        if (num >= 5 && num <= 10) {
+            // Prüfe ob das Wort einem Keyword ähnlich ist
+            if (gradeKeywords.some(kw => fuzzyMatch(word, kw))) {
+                return num;
+            }
+        }
+    }
+
+    // Pattern 2: "Zahl. + Wort" (z.B. "9. klasse", "9. kalsse")
+    const numberThenWord = /(\d+)\.\s*(\w+)/g;
+    while ((match = numberThenWord.exec(lowerMessage)) !== null) {
+        const num = parseInt(match[1]);
+        const word = match[2];
+        if (num >= 5 && num <= 10) {
+            if (gradeKeywords.some(kw => fuzzyMatch(word, kw))) {
+                return num;
+            }
+        }
+    }
+
+    // Pattern 3: Spezielle Formate ohne Fuzzy (exakte Patterns)
+    const exactPatterns = [
         /\b(\d+)\s*er\b/,            // z.B. "5er"
         /\b(\d+)\.\s*(?=halbjahr)/   // "8. Halbjahr" -> extrahiert 8
     ];
 
-    for (const pattern of gradePatterns) {
-        const match = lowerMessage.match(pattern);
-        if (match) {
-            const grade = parseInt(match[1]);
-            // Nur Klassen 5-10 sind verfügbar
+    for (const pattern of exactPatterns) {
+        const exactMatch = lowerMessage.match(pattern);
+        if (exactMatch) {
+            const grade = parseInt(exactMatch[1]);
             if (grade >= 5 && grade <= 10) {
                 return grade;
             }
@@ -336,17 +423,21 @@ async function fetchCurriculum() {
 
 // Funktion zum Prüfen, ob eine Nachricht Modul-bezogen ist
 function isModuleRelatedQuery(message, history = []) {
-    const moduleKeywords = [
+    // Keywords mit Fuzzy-Matching (längere Wörter, Tippfehler wahrscheinlich)
+    const fuzzyKeywords = [
         'modul', 'module', 'modulübersicht',
         'pflichtmodul', 'wahlmodul', 'vertiefungsmodul', 'interessenmodul',
-        'welche module', 'welches modul', 'was für module',
         'halbjahr', 'jahrgangsstufe', 'klasse',
         'unterrichtseinheit', 'lerneinheit',
-        // Fachbezogene Keywords (Abkürzungen)
-        ' pp ', 'philo', 'philosophie',
-        // Zeitraum/Fristen-bezogene Keywords
-        'frist', 'fristen', 'abgabe', 'abgabefrist', 'deadline',
-        'zeitraum', 'wann muss', 'bis wann'
+        'philosophie', 'abgabefrist', 'deadline', 'zeitraum'
+    ];
+
+    // Keywords nur exakt matchen (kurze Wörter, Multi-Wort-Phrasen)
+    const exactKeywords = [
+        'welche module', 'welches modul', 'was für module',
+        ' pp ', 'philo',
+        'frist', 'fristen', 'abgabe',
+        'wann muss', 'bis wann'
     ];
 
     // Follow-up Keywords die auf vorherige Fragen verweisen
@@ -358,8 +449,13 @@ function isModuleRelatedQuery(message, history = []) {
 
     const lowerMessage = message.toLowerCase();
 
-    // Direkte Modul-Anfrage
-    if (moduleKeywords.some(keyword => lowerMessage.includes(keyword))) {
+    // Exakte Keywords prüfen
+    if (exactKeywords.some(keyword => lowerMessage.includes(keyword))) {
+        return true;
+    }
+
+    // Fuzzy Keywords prüfen (mit Tippfehler-Toleranz)
+    if (fuzzyKeywords.some(keyword => fuzzyContains(message, keyword))) {
         return true;
     }
 
