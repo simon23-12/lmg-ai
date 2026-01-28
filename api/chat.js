@@ -647,12 +647,12 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
         // Bei Text-only: Flash-Modelle (schneller, günstiger)
         const MODELS = hasFile
             ? [
-                'gemini-2.5-pro',          // Primär bei Uploads: stabiles Pro-Modell für Bildanalyse
-                'gemini-2.5-flash'         // Fallback: schnelles Modell
+                'gemini-3-pro-preview',    // Primär: beste Bildanalyse (15s Timeout)
+                'gemini-3-flash'           // Fallback: schneller (10s Timeout)
             ]
             : [
-                'gemini-2.5-flash',        // Primär: schnelles, stabiles Modell
-                'gemini-2.5-flash-lite'    // Fallback: schnellstes Modell
+                'gemini-3-flash',          // Primär: schnelles Modell
+                'gemini-2.5-flash'         // Fallback: stabiles Modell
             ];
 
         console.log(`Datei-Upload: ${hasFile ? 'Ja (' + file.type + ')' : 'Nein'}`);
@@ -720,11 +720,11 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
             return Promise.race([resultPromise, timeoutPromise]);
         };
 
-        // Timeouts pro Modell (muss in Summe unter 10s Vercel-Limit bleiben)
+        // Timeouts pro Modell (maxDuration ist jetzt 30s in vercel.json)
         // Mit Frontend-Bildkomprimierung sind Uploads jetzt ~100-300KB
         const MODEL_TIMEOUTS = hasFile
-            ? [6000, 3000]        // 2.5-Pro → 2.5-Flash (total: 9s)
-            : [5000, 4000];       // 2.5-Flash → 2.5-Flash-Lite (total: 9s)
+            ? [15000, 10000]      // 3-Pro-Preview (15s) → 3-Flash (10s) = 25s total
+            : [10000, 8000];      // 3-Flash (10s) → 2.5-Flash (8s) = 18s total
 
         // Funktion zum Durchlaufen aller Modelle
         const tryAllModels = async () => {
