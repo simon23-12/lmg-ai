@@ -1,0 +1,482 @@
+{
+  "jahrgang": 6,
+  "schuljahr": "2025/2026",
+  "abgabefrist_1hj": "letzter Schultag vor den Weihnachtsferien",
+  "abgabefrist_2hj": "Freitag, 19.06.2026 (sofern nicht anders angegeben)",
+  "halbjahre": {
+    "1": {
+      "bezeichnung": "1. Halbjahr (6.1)",
+      "faecher": {
+        "D": {
+          "fachname": "Deutsch",
+          "module": [
+            {
+              "name": "Ich mach mich fit für den Rechtschreibtest (nach Absprache mit dem Arbeitsheft Deutsch 6 und/oder den Mildenberger-Heften)",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "im 1. Halbjahr",
+              "dauer": 6,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle und Vorlage bei der Fachlehrkraft mit anschließender Prüfung im Unterricht",
+              "hinweise": []
+            },
+            {
+              "name": "Kleines 6er-Deutschmodul",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr, Bearbeitung nach Absprache mit der Fachlehrkraft",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "E": {
+          "fachname": "Englisch",
+          "module": [
+            {
+              "name": "Holiday passport",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 5,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            },
+            {
+              "name": "1-minute talk",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "oral presentation oder Audiodatei abgeben",
+              "hinweise": []
+            }
+          ]
+        },
+        "M": {
+          "fachname": "Mathematik",
+          "module": [
+            {
+              "name": "Soma Tangram",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Abgabe bei der Fachlehrkraft",
+              "hinweise": ["Fachraum-Pflicht"]
+            },
+            {
+              "name": "Kreis und Kreisornamente",
+              "sozialform": "Einzelarbeit und Partnerarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Test auf LogineoNRW & Abgabe bei der Fachlehrkraft",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "GE": {
+          "fachname": "Geschichte",
+          "module": [
+            {
+              "name": "Altes Ägypten – Eine frühe Hochkultur",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Test auf LogineoNRW",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "PH": {
+          "fachname": "Physik",
+          "module": [
+            {
+              "name": "Magnetismus",
+              "sozialform": "Partnerarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "BI": {
+          "fachname": "Biologie",
+          "module": [
+            {
+              "name": "Körperbau des Menschen",
+              "sozialform": "Gruppenarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle und Abfrage durch Lehrkraft",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "PK": {
+          "fachname": "Politik",
+          "module": [
+            {
+              "name": "Umweltschutz geht alle an",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "MU": {
+          "fachname": "Musik",
+          "module": [
+            {
+              "name": "Die Dur- und die Moll-Tonleitern",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr 2. Quartal",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle durch Lösungsblatt",
+              "hinweise": []
+            }
+          ]
+        },
+        "KU": {
+          "fachname": "Kunst",
+          "module": [
+            {
+              "name": "Papiermodell einer Sitzgelegenheit",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr 2. Quartal",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "ER_OR": {
+          "fachname": "Evangelische/Orthodoxe Religion",
+          "module": [
+            {
+              "name": "Wohnen zur Zeit Jesu",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr 1. Quartal",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle",
+              "hinweise": []
+            }
+          ]
+        },
+        "KR": {
+          "fachname": "Katholische Religion",
+          "module": [
+            {
+              "name": "Wie spreche ich mit Gott?",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "Absprache mit der Lehrkraft",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "PPL": {
+          "fachname": "Praktische Philosophie",
+          "module": [
+            {
+              "name": "Werkstatt philosophisches Fragen 3/4",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Verschiedene Darstellungsformen - Gallerywalk",
+              "hinweise": []
+            }
+          ]
+        }
+      }
+    },
+    "2": {
+      "bezeichnung": "2. Halbjahr (6.2)",
+      "faecher": {
+        "D": {
+          "fachname": "Deutsch",
+          "module": [
+            {
+              "name": "Fabeln kennen und verstehen lernen",
+              "sozialform": "Einzelarbeit oder Partnerarbeit",
+              "zeitraum": "nach Erhalt des Materials von der LK",
+              "dauer": 5,
+              "dauer_einheit": "UE",
+              "ergebnis": "Nach Absprache mit der LK",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "E": {
+          "fachname": "Englisch",
+          "module": [
+            {
+              "name": "Reading: Because of Winn-Dixie",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle",
+              "hinweise": []
+            },
+            {
+              "name": "irregular verbs",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle",
+              "hinweise": []
+            }
+          ]
+        },
+        "M": {
+          "fachname": "Mathematik",
+          "module": [
+            {
+              "name": "Achsen-, Punkt- und Ebenensymmetrie",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr, Abgabe bis spätestens Anfang Mai",
+              "dauer": 5,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Abgabe bei der Fachlehrkraft, Teil der 6. Klassenarbeit",
+              "hinweise": []
+            },
+            {
+              "name": "Die Erweiterung des Zahlenbereichs",
+              "sozialform": "Einzelarbeit oder Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Abgabe bei der Fachlehrkraft, Teil der 6. Klassenarbeit",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "BI": {
+          "fachname": "Biologie",
+          "module": [
+            {
+              "name": "Rauchen? - Nein, danke!",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "PH": {
+          "fachname": "Physik",
+          "module": [
+            {
+              "name": "Elektrische Schaltungen",
+              "sozialform": "Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe und Online-Test",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "PK": {
+          "fachname": "Politik",
+          "module": [
+            {
+              "name": "Kinder haben Rechte",
+              "sozialform": "Einzelarbeit / Partnerarbeit / Gruppenarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Mappenbewertung",
+              "hinweise": []
+            }
+          ]
+        },
+        "GE": {
+          "fachname": "Geschichte",
+          "module": [
+            {
+              "name": "Lebensformen im Mittelalter - Wahlpflichtmodul",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "Beginn nach Einteilung im Unterricht",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Austausch in Expert*innengruppen im Fachunterricht nach Absprache mit der Lehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "GE_GR": {
+          "fachname": "Geschichte/Griechisch",
+          "module": [
+            {
+              "name": "Byzanz – das griechische Mittelalter",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Teil der Lernzielkontrolle im Fachunterricht",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "KU": {
+          "fachname": "Kunst",
+          "module": [
+            {
+              "name": "Zeichenübungen",
+              "sozialform": "In der Regel Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "MU": {
+          "fachname": "Musik",
+          "module": [
+            {
+              "name": "Do the Music-QUIZ: Teste Dein Musikwissen!",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "nach den Osterferien",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "ER_OR": {
+          "fachname": "Evangelische/Orthodoxe Religion",
+          "module": [
+            {
+              "name": "Schöpfung bewahren - Was wir dafür tun können",
+              "sozialform": "Gruppenarbeit (maximal drei SuS)",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 6,
+              "dauer_einheit": "UE",
+              "ergebnis": "Vortrag",
+              "hinweise": []
+            }
+          ]
+        },
+        "KR": {
+          "fachname": "Katholische Religion",
+          "module": [
+            {
+              "name": "Die Psalme",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Plakat (Abgabe bei der Fachlehrkraft) und Selbstkontrolle",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "PPL": {
+          "fachname": "Praktische Philosophie",
+          "module": [
+            {
+              "name": "Werkstatt philosophisches Fragen 4/4",
+              "sozialform": "Einzelarbeit / Partnerarbeit / Gruppenarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Verschiedene Darstellungsformen - Gallerywalk",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "L": {
+          "fachname": "Latein",
+          "module": [
+            {
+              "name": "Die Götter und Göttinnen der Antike (Lektion 4)",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr während der Lektion 4",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": ["Fachraum-Pflicht", "Digitales Endgerät"]
+            },
+            {
+              "name": "Latona wird wütend (Lektion 6)",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr während der Lektion 6",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "F": {
+          "fachname": "Französisch",
+          "module": [
+            {
+              "name": "La chambre de mes rêves",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "2. Halbjahr (passt gut zu unité 3)",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Zeichnung des Zimmers, Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            },
+            {
+              "name": "Mon collège",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "2. Halbjahr (passt gut zu unité 4)",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Präsentation (Plakat oder Keynote), Abgabe bei der Fachlehrkraft",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "GR": {
+          "fachname": "Griechisch",
+          "module": [
+            {
+              "name": "Mythologie I – 4. Theseus und 5. Herakles",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle",
+              "hinweise": ["Fachraum-Pflicht"]
+            },
+            {
+              "name": "Grammatik I – 1. Der Artikel und 2. Das Nomen",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

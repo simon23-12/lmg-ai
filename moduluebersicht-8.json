@@ -1,0 +1,556 @@
+{
+  "jahrgang": 8,
+  "schuljahr": "2025/2026",
+  "abgabefrist_1hj": "letzter Schultag vor den Weihnachtsferien",
+  "abgabefrist_2hj": "Freitag, 19.06.2026 (sofern nicht anders angegeben)",
+  "halbjahre": {
+    "1": {
+      "bezeichnung": "1. Halbjahr (8.1)",
+      "faecher": {
+        "D": {
+          "fachname": "Deutsch",
+          "module": [
+            {
+              "name": "Basismodul Lyrik 1: Formale Untersuchung von Gedichten",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr (nach Absprache mit der Fachlehrkraft)",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle und Abgabe bei der Fachlehrkraft bis zu den Herbstferien",
+              "hinweise": ["Fachraum-Pflicht"]
+            },
+            {
+              "name": "Basismodul Lyrik 2: Sprachliche Gestaltungsmittel",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr (nach Absprache mit der Fachlehrkraft)",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "1. Erstellung einer Lernübersicht mit Beispielen (Abgabe bis zum 11.11.), 2. Test (mdl.) durch Mplus-Lehrkraft",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "E": {
+          "fachname": "Englisch",
+          "module": [
+            {
+              "name": "Black lives matter",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Besprechung im Fachunterricht",
+              "hinweise": []
+            },
+            {
+              "name": "Vorbereitung VERA",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "ab Januar, weitere Stunden im 2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Abgabe des Laufzettels bei der Fachlehrkraft",
+              "hinweise": ["Fachraum-Pflicht", "Digitales Endgerät"]
+            }
+          ]
+        },
+        "M": {
+          "fachname": "Mathematik",
+          "module": [
+            {
+              "name": "Ähnlichkeiten und Strahlensätze",
+              "sozialform": "Einzel- oder Partnerarbeit",
+              "zeitraum": "Abgabe Modul Teil I (bis zu den Herbstferien) Abgabe Modul Teil II und Test auf Logineo (bis Modulschluss)",
+              "dauer": 6,
+              "dauer_einheit": "UE",
+              "ergebnis": "LOGINEO NRW",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "CH": {
+          "fachname": "Chemie",
+          "module": [
+            {
+              "name": "Chemie Modul",
+              "sozialform": "",
+              "zeitraum": "",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "",
+              "hinweise": []
+            }
+          ]
+        },
+        "BI": {
+          "fachname": "Biologie",
+          "module": [
+            {
+              "name": "Wie funktioniert ein COVID-Schnelltest?",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle und Abgabe bei der Fachlehrkraft",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "PK": {
+          "fachname": "Politik",
+          "module": [
+            {
+              "name": "Meine Interessen, Kompetenzen und Potenziale",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Beratung KAoA",
+              "hinweise": []
+            }
+          ]
+        },
+        "EK": {
+          "fachname": "Erdkunde",
+          "module": [
+            {
+              "name": "Naturkräfte: Risiko oder Potenzial?",
+              "sozialform": "Einzelarbeit, Partnerarbeit oder Gruppenarbeit (max 4 P.)",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "GE_GR": {
+          "fachname": "Geschichte / Griechisch",
+          "module": [
+            {
+              "name": "Die Frühe Neuzeit: Ein neues Bild vom Menschen und der Welt",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle und Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "OR": {
+          "fachname": "Orthodoxe Religion",
+          "module": [
+            {
+              "name": "Ikonen",
+              "sozialform": "Gruppenarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "ER": {
+          "fachname": "Evangelische Religion",
+          "module": [
+            {
+              "name": "Sehnsucht, Sicherheit, Sinnsuche - Sekte?",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "KR": {
+          "fachname": "Katholische Religion",
+          "module": [
+            {
+              "name": "Zeit, erwachsen zu werden: Übergangsriten und Beziehungskonzepte",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Glückwunschkarte",
+              "hinweise": []
+            }
+          ]
+        },
+        "PPL": {
+          "fachname": "Praktische Philosophie",
+          "module": [
+            {
+              "name": "Reisen und Philosophie",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe / Besprechung im Unterricht",
+              "hinweise": []
+            }
+          ]
+        },
+        "MU": {
+          "fachname": "Musik",
+          "module": [
+            {
+              "name": "Dreiklänge Dur/Moll und ihre harmonische Funktion",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "L": {
+          "fachname": "Latein",
+          "module": [
+            {
+              "name": "Diana und Apoll bestrafen Niobe (ÜS)",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "Anfang 1. Halbjahr während der Lektion 7",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            },
+            {
+              "name": "Die Geburt des Römischen Reiches",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr während Lektion 10 (auch früher möglich)",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe des AB bei Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "F": {
+          "fachname": "Französisch",
+          "module": [
+            {
+              "name": "Fou de cuisine",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr (parallel zu A plus 1, unité 5)",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            },
+            {
+              "name": "Un kahoot sur Düsseldorf",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr nach den Herbstferien",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "GR": {
+          "fachname": "Griechisch",
+          "module": [
+            {
+              "name": "Mythologie II – 1. Die Argonauten",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Absprache im Fachunterricht",
+              "hinweise": []
+            },
+            {
+              "name": "Griechische Prosa",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Absprache im Fachunterricht",
+              "hinweise": []
+            }
+          ]
+        }
+      }
+    },
+    "2": {
+      "bezeichnung": "2. Halbjahr (8.2)",
+      "faecher": {
+        "D": {
+          "fachname": "Deutsch",
+          "module": [
+            {
+              "name": "VERA 8-Vorbereitung",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "3. Quartal vor der VERA8, nach Einführung im FU",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Erst Selbstkontrolle, dann Abgabe bei der FL",
+              "hinweise": ["Digitales Endgerät"]
+            },
+            {
+              "name": "Kommasetzung im Satzgefüge",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr (erst nach Einführung durch FL)",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Erst Selbstkontrolle, dann Abgabe bei der FL, eventuell Test oder Teil einer Klassenarbeit",
+              "hinweise": []
+            }
+          ]
+        },
+        "E": {
+          "fachname": "Englisch",
+          "module": [
+            {
+              "name": "VERA 8-Vorbereitung",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr (Februar/Mitte März) vor der VERA8",
+              "dauer": 5,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Abgabe des Laufzettels bei der Fachlehrkraft",
+              "hinweise": ["Digitales Endgerät"]
+            },
+            {
+              "name": "Pflichtprojekt (Absprache im Unterricht) z.B. Roadtrip USA/ California",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "nach Absprache mit der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "M": {
+          "fachname": "Mathematik",
+          "module": [
+            {
+              "name": "VERA 8-Vorbereitung",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr (Februar/Mitte März) vor der VERA8",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Ergebnis der LSE",
+              "hinweise": []
+            }
+          ]
+        },
+        "BI": {
+          "fachname": "Biologie",
+          "module": [
+            {
+              "name": "Unterrichtsbezogenes Projekt",
+              "sozialform": "Gruppenarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe an Fachlehrkraft",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "EK": {
+          "fachname": "Erdkunde",
+          "module": [
+            {
+              "name": "Eine Metropolregion Europas unter der Lupe",
+              "sozialform": "Einzelarbeit oder Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "PK": {
+          "fachname": "Politik",
+          "module": [
+            {
+              "name": "Meine Berufsfelderkundung",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle und Gallery Walk im FU",
+              "hinweise": []
+            }
+          ]
+        },
+        "MU": {
+          "fachname": "Musik",
+          "module": [
+            {
+              "name": "Dreiklänge",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "GE": {
+          "fachname": "Geschichte",
+          "module": [
+            {
+              "name": "Wahlpflicht: Industrialisierung",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "4. Quartal (erst nach Absprache im Unterricht)",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Erst Selbstkontrolle, dann Abgabe bei der FL",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "GE_GR": {
+          "fachname": "Geschichte / Griechisch",
+          "module": [
+            {
+              "name": "Neugriechische Aufklärung im 18. u. 19. Jh.",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "„Zeitung" erstellen",
+              "hinweise": []
+            }
+          ]
+        },
+        "OR": {
+          "fachname": "Orthodoxe Religion",
+          "module": [
+            {
+              "name": "Dr. med. Jesus? Gibt es Wunder?",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "ER": {
+          "fachname": "Evangelische Religion",
+          "module": [
+            {
+              "name": "Martin Luther",
+              "sozialform": "Gruppenarbeit (4 SuS)",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Mitteilung des Spielergebnisses an die Lehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "KR": {
+          "fachname": "Katholische Religion",
+          "module": [
+            {
+              "name": "Martin Luther und die Reformation",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Zeitungsartikel Abgabe bei der Lehrkraft",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "PPL": {
+          "fachname": "Praktische Philosophie",
+          "module": [
+            {
+              "name": "Begegnungen mit der Weisheit",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Ausstellung",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "L": {
+          "fachname": "Latein",
+          "module": [
+            {
+              "name": "Held oder Verbrecher? - Vorbilder aus der römischen Frühgeschichte (Lektion 12)",
+              "sozialform": "Partnerarbeit",
+              "zeitraum": "Bis März nach Lektion 12",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            },
+            {
+              "name": "Der Kaiser muss sterben (Lektion 13)",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "Bis Mai nach Lektion 13",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "F": {
+          "fachname": "Französisch",
+          "module": [
+            {
+              "name": "Utiliser le dictionnaire",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "Bis zu den Osterferien",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle",
+              "hinweise": ["Fachraum-Pflicht"]
+            },
+            {
+              "name": "Le foot",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "Nach den Osterferien",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Audiodokument",
+              "hinweise": []
+            }
+          ]
+        },
+        "GR": {
+          "fachname": "Griechisch",
+          "module": [
+            {
+              "name": "Mythologie II – 2. Der Trojanische Krieg",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle",
+              "hinweise": ["Fachraum-Pflicht"]
+            },
+            {
+              "name": "Grammatik I – 3. Das Adjektiv",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Klassenarbeit",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

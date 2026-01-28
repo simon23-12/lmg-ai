@@ -1,0 +1,457 @@
+{
+  "jahrgang": 5,
+  "schuljahr": "2025/2026",
+  "abgabefrist_1hj": "letzter Schultag vor den Weihnachtsferien",
+  "abgabefrist_2hj": "Freitag, 19.06.2026 (sofern nicht anders angegeben)",
+  "halbjahre": {
+    "1": {
+      "bezeichnung": "1. Halbjahr (5.1)",
+      "faecher": {
+        "D": {
+          "fachname": "Deutsch",
+          "module": [
+            {
+              "name": "Meine neue Schule",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "Beginn des 1. Halbjahres",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            },
+            {
+              "name": "Schreibe einen Brief",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr ab September",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle mit Checkliste/Partnerkorrektur; Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            },
+            {
+              "name": "Tier-Safari: Beschreibung eines Tieres",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr ab Oktober",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Kontrolle durch Fachlehrkraft",
+              "hinweise": []
+            },
+            {
+              "name": "Rechtschreib- und Grammatiktraining (Mildenberger-Hefte)",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr ab November",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "E": {
+          "fachname": "Englisch",
+          "module": [
+            {
+              "name": "School words",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Kontrolle durch Fachlehrkraft",
+              "hinweise": []
+            },
+            {
+              "name": "How to tell the time",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr nach Einführung der Fachlehrkraft",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Kontrolle durch Fachlehrkraft",
+              "hinweise": []
+            },
+            {
+              "name": "My book",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Teil der ersten Klassenarbeit",
+              "hinweise": []
+            }
+          ]
+        },
+        "M": {
+          "fachname": "Mathematik",
+          "module": [
+            {
+              "name": "4 aus 12",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            },
+            {
+              "name": "Blaue Körper",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            },
+            {
+              "name": "Quaderansichten",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "MU": {
+          "fachname": "Musik",
+          "module": [
+            {
+              "name": "Instrumentenportrait: Stelle ein Instrument vor",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr 2. Quartal",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "KU": {
+          "fachname": "Kunst",
+          "module": [
+            {
+              "name": "Tiere malen und zeichnen für Angsthasen und Faultiere - Tierbuch",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "EK": {
+          "fachname": "Erdkunde",
+          "module": [
+            {
+              "name": "Atlasführerschein",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Test",
+              "hinweise": []
+            }
+          ]
+        },
+        "BI": {
+          "fachname": "Biologie",
+          "module": [
+            {
+              "name": "Tierbuch",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft (Datum nach Absprache)",
+              "hinweise": []
+            }
+          ]
+        },
+        "OR": {
+          "fachname": "Orthodoxe Religion",
+          "module": [
+            {
+              "name": "Bibelentdecker*in werden",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr ab Oktober",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle",
+              "hinweise": []
+            }
+          ]
+        },
+        "KR": {
+          "fachname": "Katholische Religion",
+          "module": [
+            {
+              "name": "Bewahrung der Schöpfung",
+              "sozialform": "Gruppenarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Plakat",
+              "hinweise": []
+            }
+          ]
+        },
+        "ER": {
+          "fachname": "Evangelische Religion",
+          "module": [
+            {
+              "name": "Das Kirchenjahr",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr ab Oktober",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Arbeitsblatt und Vortrag im Unterricht",
+              "hinweise": []
+            }
+          ]
+        },
+        "PPL": {
+          "fachname": "Praktische Philosophie",
+          "module": [
+            {
+              "name": "Werkstatt philosophisches Fragen 1/4",
+              "sozialform": "Einzelarbeit / Partnerarbeit / Gruppenarbeit",
+              "zeitraum": "1. Halbjahr, nach Einführung im Unterricht",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Gallerywalk & Abgabe der Checkliste bei der Lehrkraft",
+              "hinweise": []
+            }
+          ]
+        }
+      }
+    },
+    "2": {
+      "bezeichnung": "2. Halbjahr (5.2)",
+      "faecher": {
+        "D": {
+          "fachname": "Deutsch",
+          "module": [
+            {
+              "name": "Rechtschreib- und Grammatiktraining (Mildenberger-Hefte)",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "bis zu den Osterferien",
+              "dauer": 5,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Abgabe bei der Fachlehrkraft",
+              "hinweise": ["im gesamten Schuljahr 8 UE"]
+            },
+            {
+              "name": "Wie viele Donuts kannst du essen?",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            },
+            {
+              "name": "Lesetagebuch (Jugendroman)",
+              "sozialform": "Einzelarbeit und Partnerarbeit",
+              "zeitraum": "ab Ende April, parallel zur Unterrichtsreihe",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Lesetagebuch zur Abgabe bei der Fachlehrkraft, Ersatz der 3. Klassenarbeit",
+              "hinweise": []
+            }
+          ]
+        },
+        "E": {
+          "fachname": "Englisch",
+          "module": [
+            {
+              "name": "How to build questions in the simple present",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Kontrolle durch Fachlehrkraft",
+              "hinweise": []
+            },
+            {
+              "name": "Shock your parents… (Reading fictional texts)",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "2. Halbjahr ab Mai",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Kontrolle durch Fachlehrkraft",
+              "hinweise": []
+            },
+            {
+              "name": "The big Challenge",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle",
+              "hinweise": []
+            }
+          ]
+        },
+        "M": {
+          "fachname": "Mathematik",
+          "module": [
+            {
+              "name": "Fahrpläne",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            },
+            {
+              "name": "Arbeit mit Geodreieck und Zirkel",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 6,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle & Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "BI": {
+          "fachname": "Biologie",
+          "module": [
+            {
+              "name": "Mikroskopierführerschein",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "bis zu den Osterferien",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe im Fachraum → Erhalt des Führerscheins",
+              "hinweise": ["Fachraum-Pflicht"]
+            },
+            {
+              "name": "Pflanzen unterscheiden",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle und Abgabe bei der Fachlehrkraft",
+              "hinweise": ["Fachraum-Pflicht", "Digitales Endgerät"]
+            }
+          ]
+        },
+        "KU": {
+          "fachname": "Kunst",
+          "module": [
+            {
+              "name": "Farbteppich",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "MU": {
+          "fachname": "Musik",
+          "module": [
+            {
+              "name": "Noten in der Musik II",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "2. Halbjahr, Quartal 4",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "EK": {
+          "fachname": "Erdkunde",
+          "module": [
+            {
+              "name": "Mein Phantasiekontinent",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "PK": {
+          "fachname": "Politik",
+          "module": [
+            {
+              "name": "Klassensprecher und SV-Arbeit",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle",
+              "hinweise": []
+            }
+          ]
+        },
+        "OR": {
+          "fachname": "Orthodoxe Religion",
+          "module": [
+            {
+              "name": "Das orthodoxe Kirchenjahr",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle",
+              "hinweise": []
+            }
+          ]
+        },
+        "ER": {
+          "fachname": "Evangelische Religion",
+          "module": [
+            {
+              "name": "Bibelentdecker*in werden",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle",
+              "hinweise": []
+            }
+          ]
+        },
+        "KR": {
+          "fachname": "Katholische Religion",
+          "module": [
+            {
+              "name": "Das Kirchenjahr - Feste feiern",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Präsentation",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "PPL": {
+          "fachname": "Praktische Philosophie",
+          "module": [
+            {
+              "name": "Werkstatt philosophisches Fragen 2/4",
+              "sozialform": "Einzelarbeit / Partnerarbeit / Gruppenarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Verschiedene Darstellungsformen - Gallerywalk",
+              "hinweise": []
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,674 @@
+{
+  "jahrgang": 10,
+  "schuljahr": "2025/2026",
+  "abgabefrist_1hj": "letzter Schultag vor den Weihnachtsferien",
+  "abgabefrist_2hj": "Freitag, 19.06.2026 (sofern nicht anders angegeben)",
+  "halbjahre": {
+    "1": {
+      "bezeichnung": "1. Halbjahr (10.1)",
+      "faecher": {
+        "D": {
+          "fachname": "Deutsch",
+          "module": [
+            {
+              "name": "Sprache unter der Lupe (Teil 1)",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "bis zu den Herbstferien (nach Einführung im Unterricht)",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Concept Map - Abgabe bei der Lehrkraft",
+              "hinweise": []
+            },
+            {
+              "name": "Sprache unter der Lupe (Teil 2)",
+              "sozialform": "Gruppenarbeit",
+              "zeitraum": "2. Quartal (bis zu den Weihnachtsferien)",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "PowerPoint Präsentation - Abgabe bei der Lehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "E": {
+          "fachname": "Englisch",
+          "module": [
+            {
+              "name": "Time Travelers: Navigating English Tenses",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe nach Absprache mit der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "M": {
+          "fachname": "Mathematik",
+          "module": [
+            {
+              "name": "Körperberechnungen",
+              "sozialform": "Einzel- oder Partnerarbeit",
+              "zeitraum": "1. Halbjahr nach Einführung in Mplus",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle und Test auf LOGINEO NRW",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "BI": {
+          "fachname": "Biologie",
+          "module": [
+            {
+              "name": "Trisomie 21",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr, ab Einführung im Unterricht",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle und Abgabe bei der Fachlehrkraft",
+              "hinweise": ["Fachraum-Pflicht", "Digitales Endgerät"]
+            }
+          ]
+        },
+        "CH": {
+          "fachname": "Chemie",
+          "module": [
+            {
+              "name": "Die Neutralisation & stöchiometrische Berechnungen",
+              "sozialform": "Partnerarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle/Lernzielkontrolle durch Fachlehrkraft",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "PH": {
+          "fachname": "Physik",
+          "module": [
+            {
+              "name": "Radioaktivität",
+              "sozialform": "Partnerarbeit",
+              "zeitraum": "1. Halbjahr nach den Herbstferien",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "PK": {
+          "fachname": "Politik",
+          "module": [
+            {
+              "name": "Auf dem Weg zur Berufswahl",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "GE": {
+          "fachname": "Geschichte",
+          "module": [
+            {
+              "name": "Der Zweite Weltkrieg: Ursachen und Verlauf",
+              "sozialform": "Partnerarbeit",
+              "zeitraum": "1. Halbjahr, nach Einführung durch Laufzettel",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Teilabgabe bei der Fachlehrkraft, Test",
+              "hinweise": []
+            }
+          ]
+        },
+        "EK": {
+          "fachname": "Erdkunde",
+          "module": [
+            {
+              "name": "Die Welt in deiner Hand - woher kommt dein Smartphone?",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Erstellen von Bausteinen für eine globale Karte",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "MU": {
+          "fachname": "Musik",
+          "module": [
+            {
+              "name": "Musikpraxis – Do it yourself!",
+              "sozialform": "Einzel- oder Partnerarbeit",
+              "zeitraum": "1. Halbjahr 2. Quartal",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Rückmeldung durch die Lehrkraft",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "ER": {
+          "fachname": "Evangelische Religion",
+          "module": [
+            {
+              "name": "Mit Gott in den Freizeitpark - die kreationistische Auslegung der Bibel",
+              "sozialform": "Partnerarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Podiumsdiskussion",
+              "hinweise": []
+            }
+          ]
+        },
+        "KR": {
+          "fachname": "Katholische Religion",
+          "module": [
+            {
+              "name": "Kirche im Nationalsozialismus",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr 2. Quartal, nach Absprache mit der Fachlehrkraft",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle",
+              "hinweise": []
+            }
+          ]
+        },
+        "OR": {
+          "fachname": "Orthodoxe Religion",
+          "module": [
+            {
+              "name": "Leibniz und die Theodizee",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Lehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "PPL": {
+          "fachname": "Praktische Philosophie",
+          "module": [
+            {
+              "name": "Der philosophische Podcast",
+              "sozialform": "Partnerarbeit",
+              "zeitraum": "1. und 2. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Audiodatei aufnehmen und bei der Lehrkraft einreichen",
+              "hinweise": []
+            }
+          ]
+        },
+        "L": {
+          "fachname": "Latein",
+          "module": [
+            {
+              "name": "Der Umgang mit dem Wörterbuch",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "Ende des 1. Halbjahres",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            },
+            {
+              "name": "Die Punischen Kriege",
+              "sozialform": "Einzel- oder Partnerarbeit",
+              "zeitraum": "während Lektion 21",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle + Abgabe bei der Lehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "F": {
+          "fachname": "Französisch",
+          "module": [
+            {
+              "name": "Rafraîchissement des connaissances",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "1. HJ bis zu den Herbstferien",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle",
+              "hinweise": []
+            },
+            {
+              "name": "Faire de la pub",
+              "sozialform": "Einzel- oder Partnerarbeit",
+              "zeitraum": "1. HJ (parallel zu A plus 4 Unité 1)",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Lehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "GR": {
+          "fachname": "Griechisch",
+          "module": [
+            {
+              "name": "Ernährung",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr (1. Quartal)",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Ergebnis wird in der Klassenarbeit überprüft",
+              "hinweise": []
+            },
+            {
+              "name": "Arbeit und Beruf",
+              "sozialform": "Einzelarbeit / Partnerarbeit",
+              "zeitraum": "1. Halbjahr (2. Quartal)",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Ergebnis wird in der Klassenarbeit überprüft",
+              "hinweise": []
+            }
+          ]
+        },
+        "I_Diff": {
+          "fachname": "Italienisch Differenzierung",
+          "module": [
+            {
+              "name": "Giornalino \"Eccoci\"",
+              "sozialform": "Partner- oder Gruppenarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 6,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "IF_Diff": {
+          "fachname": "Informatik Differenzierung",
+          "module": [
+            {
+              "name": "Unterrichtsgebundenes Projekt",
+              "sozialform": "Partnerarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 6,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "PK_W_Diff": {
+          "fachname": "Politik/Wirtschaft Differenzierung",
+          "module": [
+            {
+              "name": "Neues Modul",
+              "sozialform": "Absprache mit der Fachlehrkraft",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 6,
+              "dauer_einheit": "UE",
+              "ergebnis": "Absprache mit der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "NaWi_Diff": {
+          "fachname": "Naturwissenschaften Differenzierung",
+          "module": [
+            {
+              "name": "Berühmte Menschen der Wissenschaft",
+              "sozialform": "Partnerarbeit",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 6,
+              "dauer_einheit": "UE",
+              "ergebnis": "Anfertigung und Präsentation eines Plakats",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "Th_Diff": {
+          "fachname": "Theater Differenzierung",
+          "module": [
+            {
+              "name": "Besuche im Theater",
+              "sozialform": "Ausflug als Kurs",
+              "zeitraum": "1. Halbjahr",
+              "dauer": 6,
+              "dauer_einheit": "UE",
+              "ergebnis": "",
+              "hinweise": []
+            }
+          ]
+        }
+      }
+    },
+    "2": {
+      "bezeichnung": "2. Halbjahr (10.2)",
+      "faecher": {
+        "D": {
+          "fachname": "Deutsch",
+          "module": [
+            {
+              "name": "Vorbereitung auf die ZP 10",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "nach Einführung durch die LK",
+              "dauer": 6,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle und Abgabe bei der LK",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "E": {
+          "fachname": "Englisch",
+          "module": [
+            {
+              "name": "How to survive ZP 10",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "Bis zur ZP 10",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Online-Test",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "M": {
+          "fachname": "Mathematik",
+          "module": [
+            {
+              "name": "Vorbereitung auf die ZP 10",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "Bis zum 28.05.25",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe einer selbstkontrollierten Probeklausur",
+              "hinweise": []
+            }
+          ]
+        },
+        "CH": {
+          "fachname": "Chemie",
+          "module": [
+            {
+              "name": "Die Skelettformel - Darstellung organischer Verbindungen",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "PH": {
+          "fachname": "Physik",
+          "module": [
+            {
+              "name": "Unterrichtsbezogenes Projekt zur Energiewende",
+              "sozialform": "Gruppenarbeit",
+              "zeitraum": "Informationen folgen im Fachunterricht",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "PK": {
+          "fachname": "Politik",
+          "module": [
+            {
+              "name": "Europäische Union - Vorstellung eines Mitgliedslands",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "GE": {
+          "fachname": "Geschichte",
+          "module": [
+            {
+              "name": "Kalter Krieg - Kubakrise",
+              "sozialform": "Partner- oder Gruppenarbeit",
+              "zeitraum": "2. Halbjahr (nach Einführung im Unterricht)",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "GE_GR": {
+          "fachname": "Geschichte / Griechisch",
+          "module": [
+            {
+              "name": "Griechenland im Kalten Krieg (vom Bürgerkrieg bis zum Fall der Junta)",
+              "sozialform": "",
+              "zeitraum": "",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "EK": {
+          "fachname": "Erdkunde",
+          "module": [
+            {
+              "name": "Globalisiertes Smartphone",
+              "sozialform": "Einzel- oder Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": ["Fachraum-Pflicht", "Digitales Endgerät"]
+            }
+          ]
+        },
+        "MU": {
+          "fachname": "Musik",
+          "module": [
+            {
+              "name": "Tonarten bestimmen mit dem Quintenzirkel",
+              "sozialform": "Einzel- oder Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Rückmeldung durch die Lehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "KU": {
+          "fachname": "Kunst",
+          "module": [
+            {
+              "name": "Komposition im Kasten",
+              "sozialform": "Einzel- oder Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Rückmeldung durch die Lehrkraft",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "BI": {
+          "fachname": "Biologie",
+          "module": [
+            {
+              "name": "Wie funktioniert ein Coronaschnelltest?",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Selbstkontrolle und Abgabe bei der Fachlehrkraft",
+              "hinweise": ["Fachraum-Pflicht", "Digitales Endgerät"]
+            }
+          ]
+        },
+        "ER_KR_OR": {
+          "fachname": "Evangelische Religion / Katholische Religion / Orthodoxe Religion",
+          "module": [
+            {
+              "name": "Die Bergpredigt",
+              "sozialform": "Partner oder Gruppenarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Lapbook (Abgabe bei der Fachlehrkraft)",
+              "hinweise": []
+            }
+          ]
+        },
+        "PPL": {
+          "fachname": "Praktische Philosophie",
+          "module": [
+            {
+              "name": "Der philosophische Podcast",
+              "sozialform": "Partnerarbeit",
+              "zeitraum": "1. und 2. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Audiodatei aufnehmen und bei der Lehrkraft einreichen",
+              "hinweise": ["Fachraum-Pflicht", "Digitales Endgerät"]
+            }
+          ]
+        },
+        "L": {
+          "fachname": "Latein",
+          "module": [
+            {
+              "name": "Plinius",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "parallel zum Unterricht (ca. Mai/Juni)",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            },
+            {
+              "name": "Fabel",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "während der Unterrichtsreiche \"Fabeln\"",
+              "dauer": 3,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "F": {
+          "fachname": "Französisch",
+          "module": [
+            {
+              "name": "Préparation au DELF A2",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "Februar",
+              "dauer": 2,
+              "dauer_einheit": "UE",
+              "ergebnis": "Kleines Sprachdiplom",
+              "hinweise": ["Digitales Endgerät"]
+            },
+            {
+              "name": "Le Maroc",
+              "sozialform": "Einzel- oder Partnerarbeit",
+              "zeitraum": "ab März",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": ["Digitales Endgerät"]
+            }
+          ]
+        },
+        "GR": {
+          "fachname": "Griechisch",
+          "module": [
+            {
+              "name": "Wirtschaft",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 6,
+              "dauer_einheit": "UE",
+              "ergebnis": "",
+              "hinweise": ["Fachraum-Pflicht"]
+            }
+          ]
+        },
+        "I_Diff": {
+          "fachname": "Italienisch Differenzierung",
+          "module": [
+            {
+              "name": "Giornalino \"Eccoci\": Sport e Moda",
+              "sozialform": "Partner- oder Gruppenarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe bei der Fachlehrkraft",
+              "hinweise": []
+            }
+          ]
+        },
+        "IF_Diff": {
+          "fachname": "Informatik Differenzierung",
+          "module": [
+            {
+              "name": "Erstelle eine Webseite mit HTML und CSS",
+              "sozialform": "Einzelarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Abgabe einer Webseite per Logineo",
+              "hinweise": ["Fachraum-Pflicht", "Digitales Endgerät"]
+            }
+          ]
+        },
+        "PK_W_Diff": {
+          "fachname": "Politik/Wirtschaft Differenzierung",
+          "module": [
+            {
+              "name": "Unterrichtsbezogenes Projekt",
+              "sozialform": "",
+              "zeitraum": "Informationen folgen im Fachunterricht",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "",
+              "hinweise": []
+            }
+          ]
+        },
+        "NaWi_Diff": {
+          "fachname": "Naturwissenschaften Differenzierung",
+          "module": [
+            {
+              "name": "Unterrichtsbezogenes Projekt",
+              "sozialform": "Partnerarbeit",
+              "zeitraum": "2. Halbjahr",
+              "dauer": 4,
+              "dauer_einheit": "UE",
+              "ergebnis": "Über Logineo",
+              "hinweise": []
+            }
+          ]
+        }
+      }
+    }
+  }
+}
