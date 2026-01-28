@@ -647,12 +647,12 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
         // Bei Text-only: Flash-Modelle (schneller, günstiger)
         const MODELS = hasFile
             ? [
-                'gemini-3-pro',            // Primär bei Uploads: neuestes Pro-Modell, beste Bildanalyse
+                'gemini-3-pro-preview',    // Primär bei Uploads: neuestes Pro-Modell, beste Bildanalyse
                 'gemini-2.5-flash',        // Fallback 1: schnelles, fähiges Modell
                 'gemini-2.5-flash-lite'    // Fallback 2: schnellstes Modell
             ]
             : [
-                'gemini-3-flash',          // Primär: neuestes Flash-Modell
+                'gemini-3-flash-preview',  // Primär: neuestes Flash-Modell
                 'gemini-2.5-flash',        // Fallback 1: stabiles Modell
                 'gemini-2.5-flash-lite'    // Fallback 2: schnellstes Modell
             ];
