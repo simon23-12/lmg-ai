@@ -647,13 +647,14 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
         // Bei Text-only: Flash-Modelle (schneller, günstiger)
         const MODELS = hasFile
             ? [
-                'gemini-2.5-pro',          // Primär bei Uploads: Pro-Modell für beste Bildanalyse
+                'gemini-3-pro',            // Primär bei Uploads: neuestes Pro-Modell, beste Bildanalyse
                 'gemini-2.5-flash',        // Fallback 1: schnelles, fähiges Modell
                 'gemini-2.5-flash-lite'    // Fallback 2: schnellstes Modell
             ]
             : [
-                'gemini-2.5-flash',        // Primär: stabiles, schnelles Modell
-                'gemini-2.5-flash-lite'    // Fallback: noch schneller, günstiger
+                'gemini-3-flash',          // Primär: neuestes Flash-Modell
+                'gemini-2.5-flash',        // Fallback 1: stabiles Modell
+                'gemini-2.5-flash-lite'    // Fallback 2: schnellstes Modell
             ];
 
         console.log(`Datei-Upload: ${hasFile ? 'Ja (' + file.type + ')' : 'Nein'}`);
@@ -722,10 +723,10 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
         };
 
         // Timeouts pro Modell (muss in Summe unter 10s Vercel-Limit bleiben)
-        // Bei Uploads: Pro hat mehr Zeit, aber weniger Fallbacks möglich
+        // Bei Uploads: gemini-3-pro braucht mehr Zeit für Bildanalyse
         const MODEL_TIMEOUTS = hasFile
-            ? [4000, 3000, 2000]  // Pro → Flash → Lite (total: 9s max)
-            : [5000, 4000];       // Flash → Lite (total: 9s max)
+            ? [4500, 2500, 2000]  // 3-Pro → 2.5-Flash → 2.5-Flash-Lite (total: 9s max)
+            : [4000, 3000, 2000]; // 3-Flash → 2.5-Flash → 2.5-Flash-Lite (total: 9s max)
 
         // Funktion zum Durchlaufen aller Modelle
         const tryAllModels = async () => {
@@ -749,8 +750,9 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
             throw lastError;
         };
 
-        // Nur 1 Versuch wegen Vercel 10s Timeout-Limit
-        const MAX_RETRIES = 1;
+        // Bei Uploads: 3 Versuche mit Exponential Backoff (Bilder brauchen mehr Zeit)
+        // Bei Text-only: 1 Versuch (schnellere Antwort)
+        const MAX_RETRIES = hasFile ? 3 : 1;
         let text;
         let lastError = null;
 
@@ -764,8 +766,8 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
                 console.error(`Alle Modelle fehlgeschlagen in Versuch ${attempt}:`, error.message);
 
                 if (attempt < MAX_RETRIES) {
-                    // Exponential Backoff: 1 Sekunde beim ersten Retry
-                    const backoffMs = 1000 * attempt;
+                    // Exponential Backoff: 1s, 2s, 4s... zwischen Versuchen
+                    const backoffMs = 1000 * Math.pow(2, attempt - 1);
                     console.log(`Warte ${backoffMs}ms vor nächstem Versuch...`);
                     await new Promise(resolve => setTimeout(resolve, backoffMs));
                 }
