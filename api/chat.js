@@ -33,6 +33,147 @@ async function fetchWithTimeout(url, timeoutMs = 3000) {
     }
 }
 
+// Funktion zur Erkennung der Sprache einer Nachricht
+function detectLanguage(message) {
+    const lowerMessage = message.toLowerCase();
+
+    // Deutsche Indikatoren (häufige Wörter und Muster)
+    const germanIndicators = [
+        /\b(ich|du|er|sie|es|wir|ihr)\b/,
+        /\b(ist|sind|bin|bist|war|waren)\b/,
+        /\b(und|oder|aber|wenn|dass|weil)\b/,
+        /\b(der|die|das|den|dem|ein|eine|einer)\b/,
+        /\b(nicht|auch|noch|schon|nur|sehr)\b/,
+        /\b(kann|kannst|können|muss|müssen|soll|sollte)\b/,
+        /\b(hallo|guten|morgen|tag|danke|bitte)\b/,
+        /\b(wie|was|wer|wo|wann|warum|welche|welcher)\b/,
+        /[äöüß]/
+    ];
+
+    // Englische Indikatoren
+    const englishIndicators = [
+        /\b(i|you|he|she|it|we|they)\b/,
+        /\b(is|are|am|was|were|been|being)\b/,
+        /\b(the|a|an|this|that|these|those)\b/,
+        /\b(and|or|but|if|because|when|while)\b/,
+        /\b(can|could|will|would|should|must|may|might)\b/,
+        /\b(hello|hi|hey|thanks|thank|please)\b/,
+        /\b(how|what|who|where|when|why|which)\b/,
+        /\b(have|has|had|do|does|did)\b/
+    ];
+
+    // Französische Indikatoren
+    const frenchIndicators = [
+        /\b(je|tu|il|elle|nous|vous|ils|elles)\b/,
+        /\b(est|sont|suis|es|était|étaient)\b/,
+        /\b(le|la|les|un|une|des)\b/,
+        /\b(et|ou|mais|si|que|parce)\b/,
+        /\b(bonjour|salut|merci|s'il vous plaît|bonsoir)\b/,
+        /\b(comment|quoi|qui|où|quand|pourquoi)\b/,
+        /[éèêëàâùûîïôç]/
+    ];
+
+    // Spanische Indikatoren
+    const spanishIndicators = [
+        /\b(yo|tú|él|ella|nosotros|vosotros|ellos|ellas)\b/,
+        /\b(es|son|soy|eres|era|eran|está|están)\b/,
+        /\b(el|la|los|las|un|una|unos|unas)\b/,
+        /\b(y|o|pero|si|que|porque)\b/,
+        /\b(hola|gracias|por favor|buenos días)\b/,
+        /\b(cómo|qué|quién|dónde|cuándo|por qué)\b/,
+        /[ñáéíóúü¿¡]/
+    ];
+
+    // Türkische Indikatoren
+    const turkishIndicators = [
+        /\b(ben|sen|o|biz|siz|onlar)\b/,
+        /\b(var|yok|değil|evet|hayır)\b/,
+        /\b(ve|veya|ama|eğer|çünkü)\b/,
+        /\b(merhaba|selam|teşekkür|lütfen)\b/,
+        /\b(nasıl|ne|kim|nerede|ne zaman|neden)\b/,
+        /[ğışçöü]/
+    ];
+
+    // Arabische Indikatoren (arabische Schriftzeichen)
+    const arabicIndicators = [
+        /[\u0600-\u06FF]/  // Arabische Schriftzeichen
+    ];
+
+    // Zähle Treffer für jede Sprache
+    const countMatches = (indicators) => {
+        return indicators.filter(pattern => pattern.test(lowerMessage)).length;
+    };
+
+    const scores = {
+        'de': countMatches(germanIndicators),
+        'en': countMatches(englishIndicators),
+        'fr': countMatches(frenchIndicators),
+        'es': countMatches(spanishIndicators),
+        'tr': countMatches(turkishIndicators),
+        'ar': countMatches(arabicIndicators)
+    };
+
+    // Finde die Sprache mit dem höchsten Score
+    let maxScore = 0;
+    let detectedLang = 'de'; // Standard: Deutsch
+
+    for (const [lang, score] of Object.entries(scores)) {
+        if (score > maxScore) {
+            maxScore = score;
+            detectedLang = lang;
+        }
+    }
+
+    // Nur wenn mindestens 2 Indikatoren gefunden wurden, als nicht-deutsch werten
+    // (verhindert Fehlerkennungen bei einzelnen Wörtern)
+    if (detectedLang !== 'de' && maxScore < 2) {
+        return 'de';
+    }
+
+    return detectedLang;
+}
+
+// Funktion zur Erkennung der aktiven Sprache aus dem Chat-Verlauf
+function detectActiveLanguage(message, history = []) {
+    // Zuerst die aktuelle Nachricht prüfen
+    const currentLang = detectLanguage(message);
+
+    // Wenn die aktuelle Nachricht nicht-deutsch ist, diese Sprache verwenden
+    if (currentLang !== 'de') {
+        console.log(`Sprache aus aktueller Nachricht erkannt: ${currentLang}`);
+        return currentLang;
+    }
+
+    // Wenn die aktuelle Nachricht deutsch ist, im Chat-Verlauf nach einer aktiven Sprache suchen
+    // (nur die letzten User-Nachrichten prüfen, da der Bot evtl. auf einer anderen Sprache geantwortet hat)
+    if (history && history.length > 0) {
+        // Prüfe die letzten 6 Nachrichten (3 User + 3 Assistant)
+        const recentHistory = history.slice(-6);
+        for (let i = recentHistory.length - 1; i >= 0; i--) {
+            if (recentHistory[i].role === 'user') {
+                const historyLang = detectLanguage(recentHistory[i].content);
+                if (historyLang !== 'de') {
+                    console.log(`Aktive Sprache aus Chat-Verlauf: ${historyLang}`);
+                    return historyLang;
+                }
+            }
+        }
+    }
+
+    // Standard: Deutsch
+    return 'de';
+}
+
+// Sprachnamen für den System Prompt
+const LANGUAGE_NAMES = {
+    'de': 'Deutsch',
+    'en': 'Englisch (English)',
+    'fr': 'Französisch (Français)',
+    'es': 'Spanisch (Español)',
+    'tr': 'Türkisch (Türkçe)',
+    'ar': 'Arabisch (العربية)'
+};
+
 // Funktion zur Erkennung der Jahrgangsstufe aus der Nachricht
 function detectGradeLevel(message) {
     const lowerMessage = message.toLowerCase();
@@ -315,7 +456,10 @@ Wichtige Regeln:
 - Gib bei Hausaufgaben Hilfestellung, aber keine kompletten Lösungen
 - Frage nach, wenn etwas unklar ist
 
-Antworte auf Deutsch und sei freundlich und unterstützend.`;
+Antworte auf Deutsch und sei freundlich und unterstützend.
+
+WICHTIG - SPRACHANPASSUNG:
+{LANGUAGE_INSTRUCTION}`;
 
 const MODULE_CONTEXT_ADDITION = `
 
@@ -392,8 +536,21 @@ module.exports = async (req, res) => {
             });
         }
 
+        // Erkenne die Sprache des Benutzers
+        const detectedLanguage = detectActiveLanguage(message, history);
+        console.log(`Erkannte Sprache: ${detectedLanguage} (${LANGUAGE_NAMES[detectedLanguage]})`);
+
+        // Erstelle Sprachanweisung basierend auf erkannter Sprache
+        let languageInstruction;
+        if (detectedLanguage === 'de') {
+            languageInstruction = 'Der Benutzer schreibt auf Deutsch. Antworte auf Deutsch.';
+        } else {
+            const langName = LANGUAGE_NAMES[detectedLanguage];
+            languageInstruction = `Der Benutzer schreibt auf ${langName}. Antworte in derselben Sprache (${langName}), bis der Benutzer wieder auf Deutsch schreibt. Behalte dabei alle anderen Regeln bei (schulrelevante Themen, kurze Antworten, etc.).`;
+        }
+
         // Prüfe ob zusätzliche Kontextinformationen benötigt werden
-        let systemPrompt = BASE_SYSTEM_PROMPT;
+        let systemPrompt = BASE_SYSTEM_PROMPT.replace('{LANGUAGE_INSTRUCTION}', languageInstruction);
 
         // Prüfe welche Kontexte benötigt werden (mit history für Follow-up Erkennung)
         const needsModuleInfo = isModuleRelatedQuery(message, history);
