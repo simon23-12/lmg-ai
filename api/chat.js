@@ -467,7 +467,7 @@ function isModuleRelatedQuery(message, history = []) {
             const recentHistory = history.slice(-4);
             for (const msg of recentHistory) {
                 const lowerContent = msg.content.toLowerCase();
-                if (moduleKeywords.some(keyword => lowerContent.includes(keyword))) {
+                if (fuzzyKeywords.some(keyword => lowerContent.includes(keyword))) {
                     console.log('Follow-up Frage zu Modul-Thema erkannt');
                     return true;
                 }
