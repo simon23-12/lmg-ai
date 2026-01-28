@@ -615,12 +615,11 @@ module.exports = async (req, res) => {
         // Initialisiere Google Generative AI
         const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
-        // Modell-Konfiguration mit Fallbacks (4 Modelle in Prioritätsreihenfolge)
+        // Modell-Konfiguration mit Fallbacks (2 Modelle für Vercel 10s Limit)
+        // Gesamtzeit muss unter 10s bleiben: 2 Modelle × 4s = 8s max
         const MODELS = [
-            'gemini-3-flash-preview',  // Primär: schnellstes Modell
-            'gemini-2.5-flash',        // Fallback 1: schnelles Modell
-            'gemini-3-pro',            // Fallback 2: Pro-Modell
-            'gemini-2.5-pro'           // Fallback 3: stabiles Pro-Modell
+            'gemini-2.5-flash',        // Primär: stabiles, schnelles Modell
+            'gemini-2.5-flash-lite'    // Fallback: noch schneller, günstiger
         ];
 
         // Baue Chat-Verlauf auf
@@ -661,8 +660,8 @@ module.exports = async (req, res) => {
             return Promise.race([resultPromise, timeoutPromise]);
         };
 
-        // Timeouts pro Modell (kürzere Timeouts für schnellere Fallbacks)
-        const MODEL_TIMEOUTS = [4000, 3500, 3000, 2500];
+        // Timeouts pro Modell (muss in Summe unter 10s Vercel-Limit bleiben)
+        const MODEL_TIMEOUTS = [5000, 4000];
 
         // Funktion zum Durchlaufen aller Modelle
         const tryAllModels = async () => {
@@ -686,8 +685,8 @@ module.exports = async (req, res) => {
             throw lastError;
         };
 
-        // Exponential Backoff: 2 Versuche mit allen Modellen
-        const MAX_RETRIES = 2;
+        // Nur 1 Versuch wegen Vercel 10s Timeout-Limit
+        const MAX_RETRIES = 1;
         let text;
         let lastError = null;
 
