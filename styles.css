@@ -98,24 +98,10 @@ body {
 
 .header .logo {
     height: 60px;
-    margin-bottom: 10px;
     background: white;
     padding: 10px 20px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.header h1 {
-    color: white;
-    font-size: 2rem;
-    margin-bottom: 5px;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.2);
-}
-
-.header p {
-    color: rgba(255,255,255,0.9);
-    font-size: 0.95rem;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.15);
 }
 
 .chat-container {
@@ -123,8 +109,9 @@ body {
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-left: 1px solid rgba(255, 255, 255, 0.2);
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: none;
+    border-radius: 0 0 15px 15px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -343,22 +330,6 @@ body {
     opacity: 0.5;
 }
 
-.footer {
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-top: none;
-    padding: 15px;
-    border-radius: 0 0 15px 15px;
-    text-align: center;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-}
-
-.footer p {
-    color: rgba(255,255,255,0.7);
-    font-size: 0.85rem;
-}
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -379,15 +350,6 @@ body {
     .header .logo {
         height: 45px;
         padding: 8px 15px;
-    }
-
-    .header h1 {
-        font-size: 1.5rem;
-        margin-bottom: 3px;
-    }
-
-    .header p {
-        font-size: 0.85rem;
     }
 
     .clear-button, .about-button {
@@ -442,13 +404,8 @@ body {
         display: none; /* Nur Icon auf Mobile */
     }
 
-    .footer {
-        padding: 10px;
+    .chat-container {
         border-radius: 0 0 10px 10px;
-    }
-
-    .footer p {
-        font-size: 0.75rem;
     }
 
     .timestamp {
@@ -475,14 +432,6 @@ body {
     .header .logo {
         height: 40px;
         padding: 6px 12px;
-    }
-
-    .header h1 {
-        font-size: 1.3rem;
-    }
-
-    .header p {
-        font-size: 0.8rem;
     }
 
     .clear-button, .about-button {
@@ -530,13 +479,8 @@ body {
         min-width: 45px;
     }
 
-    .footer {
+    .chat-container {
         border-radius: 0;
-        padding: 8px;
-    }
-
-    .footer p {
-        font-size: 0.7rem;
     }
 }
 
