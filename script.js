@@ -207,8 +207,65 @@ function clearChat() {
     userInput.focus();
 }
 
+// Bild komprimieren (max 1200px, 70% Qualität)
+function compressImage(file, maxWidth = 1200, maxHeight = 1200, quality = 0.7) {
+    console.log('Starte Bildkomprimierung für:', file.name, file.type, Math.round(file.size / 1024) + 'KB');
+
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            console.log('FileReader fertig, erstelle Image...');
+            const img = new Image();
+            img.onload = function() {
+                try {
+                    console.log('Bild geladen:', img.width, 'x', img.height);
+
+                    // Berechne neue Dimensionen
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > maxWidth || height > maxHeight) {
+                        const ratio = Math.min(maxWidth / width, maxHeight / height);
+                        width = Math.round(width * ratio);
+                        height = Math.round(height * ratio);
+                        console.log('Neue Größe:', width, 'x', height);
+                    }
+
+                    // Canvas erstellen und Bild zeichnen
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Als komprimiertes JPEG exportieren
+                    const compressedData = canvas.toDataURL('image/jpeg', quality);
+
+                    const originalKB = Math.round(file.size / 1024);
+                    const compressedKB = Math.round(compressedData.length * 0.75 / 1024);
+                    console.log(`✅ Bild komprimiert: ${originalKB}KB → ${compressedKB}KB (${Math.round(100 - (compressedKB/originalKB)*100)}% kleiner)`);
+                    resolve(compressedData);
+                } catch (err) {
+                    console.error('Canvas-Fehler:', err);
+                    reject(err);
+                }
+            };
+            img.onerror = function(err) {
+                console.error('Bild laden fehlgeschlagen:', err);
+                reject(err);
+            };
+            img.src = e.target.result;
+        };
+        reader.onerror = function(err) {
+            console.error('FileReader Fehler:', err);
+            reject(err);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
 // Datei auswählen
-function handleFileSelect(event) {
+async function handleFileSelect(event) {
     const file = event.target.files[0];
     if (!file) return;
 
@@ -223,23 +280,39 @@ function handleFileSelect(event) {
     // Datei speichern
     selectedFile = file;
 
-    // Datei als Base64 einlesen
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        selectedFileData = e.target.result;
-
-        // Vorschau anzeigen
-        if (file.type.startsWith('image/')) {
+    // Bilder komprimieren, andere Dateien direkt einlesen
+    if (file.type.startsWith('image/')) {
+        try {
+            // Bild komprimieren für schnellere Uploads
+            selectedFileData = await compressImage(file);
             previewImage.src = selectedFileData;
             previewImage.style.display = 'block';
-        } else {
-            previewImage.style.display = 'none';
+            previewFileName.textContent = file.name;
+            filePreview.style.display = 'flex';
+        } catch (error) {
+            console.error('❌ Komprimierung fehlgeschlagen, verwende Original:', error);
+            // Fallback: Original verwenden
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedFileData = e.target.result;
+                previewImage.src = selectedFileData;
+                previewImage.style.display = 'block';
+                previewFileName.textContent = file.name;
+                filePreview.style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
         }
-
-        previewFileName.textContent = file.name;
-        filePreview.style.display = 'flex';
-    };
-    reader.readAsDataURL(file);
+    } else {
+        // Nicht-Bilder direkt einlesen
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            selectedFileData = e.target.result;
+            previewImage.style.display = 'none';
+            previewFileName.textContent = file.name;
+            filePreview.style.display = 'flex';
+        };
+        reader.readAsDataURL(file);
+    }
 }
 
 // Ausgewählte Datei entfernen
