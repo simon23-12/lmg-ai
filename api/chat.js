@@ -648,8 +648,7 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
         const MODELS = hasFile
             ? [
                 'gemini-3-pro-preview',    // Primär bei Uploads: neuestes Pro-Modell, beste Bildanalyse
-                'gemini-2.5-flash',        // Fallback 1: schnelles, fähiges Modell
-                'gemini-2.5-flash-lite'    // Fallback 2: schnellstes Modell
+                'gemini-2.5-flash'         // Fallback: schnelles Modell (kein Lite bei Bildern)
             ]
             : [
                 'gemini-3-flash-preview',  // Primär: neuestes Flash-Modell
@@ -723,9 +722,9 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
         };
 
         // Timeouts pro Modell (muss in Summe unter 10s Vercel-Limit bleiben)
-        // Bei Uploads: gemini-3-pro braucht mehr Zeit für Bildanalyse
+        // Mit Frontend-Bildkomprimierung sind Uploads jetzt ~300-500KB statt 3.5MB
         const MODEL_TIMEOUTS = hasFile
-            ? [4500, 2500, 2000]  // 3-Pro → 2.5-Flash → 2.5-Flash-Lite (total: 9s max)
+            ? [6000, 2500]        // 3-Pro-Preview → 2.5-Flash (total: 8.5s, kein Lite bei Bildern)
             : [4000, 3000, 2000]; // 3-Flash → 2.5-Flash → 2.5-Flash-Lite (total: 9s max)
 
         // Funktion zum Durchlaufen aller Modelle
@@ -750,9 +749,9 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
             throw lastError;
         };
 
-        // Bei Uploads: 3 Versuche mit Exponential Backoff (Bilder brauchen mehr Zeit)
-        // Bei Text-only: 1 Versuch (schnellere Antwort)
-        const MAX_RETRIES = hasFile ? 3 : 1;
+        // Mit Frontend-Bildkomprimierung reicht 1 Versuch (Bilder sind jetzt ~300-500KB)
+        // Timeouts sind länger, daher kein Retry nötig
+        const MAX_RETRIES = 1;
         let text;
         let lastError = null;
 
