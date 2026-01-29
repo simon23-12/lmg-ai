@@ -912,7 +912,21 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
 
         // Prüfe ob erfolgreich
         if (text) {
-            return res.status(200).json({ response: text });
+            // SICHERHEITSCHECK: Entferne interne Platzhalter falls die KI diese ausgegeben hat
+            // Diese sollten NIEMALS in der Antwort vorkommen, da sie parseMarkdown() Interna sind
+            const cleanedText = text
+                .replace(/___LATEX_INLINE_\d+___/g, '')
+                .replace(/___LATEX_BLOCK_\d+___/g, '')
+                .replace(/LATEXINLINE\d*/g, '')
+                .replace(/LATEXBLOCK\d*/g, '');
+
+            if (cleanedText !== text) {
+                console.warn('⚠️ AI hat interne Platzhalter ausgegeben! Diese wurden entfernt.');
+                console.warn('Original:', text);
+                console.warn('Bereinigt:', cleanedText);
+            }
+
+            return res.status(200).json({ response: cleanedText });
         }
 
         // Alle Versuche fehlgeschlagen
