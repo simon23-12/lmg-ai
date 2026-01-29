@@ -1,6 +1,83 @@
 // Vercel Serverless Function für Google Gemini API
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
+// Funktion zum Konvertieren von Gemini's LATEXINLINE-Platzhaltern zu echten LaTeX-Formeln
+// Gemini gibt Formeln als "LATEXINLINE0 (Beschreibung)" aus - wir ersetzen sie mit echtem LaTeX
+function convertFormulasToLatex(text) {
+    if (!text) return text;
+
+    let result = text;
+
+    // Mapping von Beschreibungs-Keywords zu LaTeX-Formeln
+    const descriptionToLatex = [
+        // Mechanik - Kraft
+        { keywords: ['kraft', 'masse', 'beschleunigung', 'f = m'], latex: '$F = m \\cdot a$' },
+        { keywords: ['newton', 'grundgesetz', 'dynamik'], latex: '$F = m \\cdot a$' },
+
+        // Mechanik - Geschwindigkeit
+        { keywords: ['geschwindigkeit', 'weg', 'zeit', 'v = s'], latex: '$v = \\frac{s}{t}$' },
+
+        // Mechanik - Beschleunigung
+        { keywords: ['beschleunigung', 'geschwindigkeitsänderung', 'a = '], latex: '$a = \\frac{\\Delta v}{\\Delta t}$' },
+
+        // Mechanik - Energie
+        { keywords: ['kinetische energie', 'bewegungsenergie', 'e_kin', 'einhalb', '1/2'], latex: '$E_{kin} = \\frac{1}{2} m v^2$' },
+        { keywords: ['potenzielle energie', 'lageenergie', 'e_pot', 'höhe'], latex: '$E_{pot} = m \\cdot g \\cdot h$' },
+
+        // Mechanik - Arbeit & Leistung
+        { keywords: ['arbeit', 'kraft mal weg', 'w = f'], latex: '$W = F \\cdot s$' },
+        { keywords: ['leistung', 'arbeit pro zeit', 'p = w'], latex: '$P = \\frac{W}{t}$' },
+
+        // Mechanik - Impuls
+        { keywords: ['impuls', 'p = m'], latex: '$p = m \\cdot v$' },
+
+        // Elektrizität - Ohm
+        { keywords: ['ohm', 'spannung', 'widerstand', 'stromstärke', 'u = r'], latex: '$U = R \\cdot I$' },
+        { keywords: ['widerstand', 'r = u'], latex: '$R = \\frac{U}{I}$' },
+        { keywords: ['stromstärke', 'i = u'], latex: '$I = \\frac{U}{R}$' },
+
+        // Elektrizität - Leistung
+        { keywords: ['elektrische leistung', 'spannung mal', 'p = u'], latex: '$P = U \\cdot I$' },
+        { keywords: ['elektrische energie', 'leistung mal zeit', 'e = p'], latex: '$E = P \\cdot t$' },
+
+        // Relativität
+        { keywords: ['einstein', 'e = mc', 'lichtgeschwindigkeit'], latex: '$E = m c^2$' },
+    ];
+
+    // Finde und ersetze LATEXINLINE-Pattern mit Beschreibung in Klammern
+    // Pattern: "LATEXINLINE0 (Beschreibung)" oder "LATEXINLINE0: Beschreibung"
+    const latexPattern = /LATEXINLINE\d+\s*[:\(]?\s*([^):\n]+?)[\):]?(?=\s*[,.\n]|$)/gi;
+
+    result = result.replace(latexPattern, (_, description) => {
+        const lowerDesc = description.toLowerCase();
+
+        // Finde passende Formel basierend auf Keywords in der Beschreibung
+        for (const mapping of descriptionToLatex) {
+            const matchCount = mapping.keywords.filter(kw => lowerDesc.includes(kw)).length;
+            if (matchCount >= 1) {
+                return mapping.latex;
+            }
+        }
+
+        // Fallback: Beschreibung behalten wenn keine Formel gefunden
+        return `(${description.trim()})`;
+    });
+
+    // Entferne verbleibende LATEXINLINE/LATEXBLOCK ohne Beschreibung
+    result = result
+        .replace(/LATEXINLINE\d*/g, '')
+        .replace(/LATEXBLOCK\d*/g, '')
+        .replace(/___LATEX_(INLINE|BLOCK)_\d+___/g, '');
+
+    // Bereinige doppelte Leerzeichen und Klammern
+    result = result
+        .replace(/\s{2,}/g, ' ')
+        .replace(/\(\s*\)/g, '')
+        .trim();
+
+    return result;
+}
+
 // Cache für Modulübersicht, Schulinformationen und Curriculum (wird beim ersten Request geladen)
 let moduleOverviewCache = null;
 let moduleOverviewCacheTimestamp = null;
@@ -530,14 +607,10 @@ function isCurriculumRelatedQuery(message) {
 const BASE_SYSTEM_PROMPT = `Du bist die hausinterne künstliche Intelligenz des Leibniz-Montessori-Gymnasiums. Du unterstützt Schülerinnen und Schüler sowie deren Eltern bei schulrelevanten Themen und Fragen zur Schule.
 
 MATHEMATISCHE FORMELN:
-Schreibe ALLE mathematischen Formeln in LaTeX-Syntax mit $...$
-Beispiele:
-- Geschwindigkeit: $v = \\frac{s}{t}$
-- Kraft (Newton): $F = m \\cdot a$
-- Kinetische Energie: $E_{\\text{kin}} = \\frac{1}{2} m v^2$
-- Potenzielle Energie: $E_{\\text{pot}} = m \\cdot g \\cdot h$
-- Ohm'sches Gesetz: $U = R \\cdot I$
-- Beschleunigung: $a = \\frac{\\Delta v}{\\Delta t}$
+Schreibe Formeln als normalen Text, OHNE spezielle Formatierung.
+Beispiel: v = s / t (Geschwindigkeit ist Weg durch Zeit)
+Beispiel: F = m · a (Kraft ist Masse mal Beschleunigung)
+Beispiel: E = 1/2 · m · v² (kinetische Energie)
 
 WICHTIG - SCHULWEBSITE:
 - Die offizielle Website ist: https://www.leibniz-montessori.de/
@@ -902,9 +975,10 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
 
         // Prüfe ob erfolgreich
         if (text) {
-            // Die KI gibt jetzt direkt LaTeX aus ($...$), keine Konvertierung nötig
-            console.log('Antwort verarbeitet');
-            return res.status(200).json({ response: text });
+            // Konvertiere Text-Formeln zu LaTeX und entferne Platzhalter
+            const processedText = convertFormulasToLatex(text);
+            console.log('Antwort verarbeitet (Formeln konvertiert)');
+            return res.status(200).json({ response: processedText });
         }
 
         // Alle Versuche fehlgeschlagen
