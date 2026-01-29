@@ -263,6 +263,19 @@ function addMessage(content, role, file = null, fileData = null) {
     messageDiv.appendChild(timestamp);
     messagesContainer.appendChild(messageDiv);
 
+    // KaTeX Auto-Render aufrufen (für LaTeX-Formeln)
+    if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(messageDiv, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\[", right: "\\]", display: true },
+                { left: "\\(", right: "\\)", display: false }
+            ],
+            throwOnError: false
+        });
+    }
+
     // Nach unten scrollen
     scrollToBottom();
 }
