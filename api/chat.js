@@ -1,6 +1,77 @@
 // Vercel Serverless Function für Google Gemini API
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
+// Funktion zum Konvertieren von Text-Formeln zu LaTeX
+// Erkennt Patterns wie "v = s / t" und konvertiert zu "$v = \frac{s}{t}$"
+function convertFormulasToLatex(text) {
+    if (!text) return text;
+
+    // Entferne zuerst alle LATEXINLINE/LATEXBLOCK Platzhalter
+    let result = text
+        .replace(/LATEXINLINE\d*/g, '')
+        .replace(/LATEXBLOCK\d*/g, '')
+        .replace(/___LATEX_(INLINE|BLOCK)_\d+___/g, '');
+
+    // Bekannte Formeln als Map (Text -> LaTeX)
+    const formulaMap = {
+        // Mechanik
+        'v = s / t': '$v = \\frac{s}{t}$',
+        'v = s/t': '$v = \\frac{s}{t}$',
+        'a = Δv / Δt': '$a = \\frac{\\Delta v}{\\Delta t}$',
+        'a = Δv/Δt': '$a = \\frac{\\Delta v}{\\Delta t}$',
+        'a = v / t': '$a = \\frac{v}{t}$',
+        'a = v/t': '$a = \\frac{v}{t}$',
+        'F = m · a': '$F = m \\cdot a$',
+        'F = m * a': '$F = m \\cdot a$',
+        'F = m a': '$F = m \\cdot a$',
+        'W = F · s': '$W = F \\cdot s$',
+        'W = F * s': '$W = F \\cdot s$',
+        'W = F s': '$W = F \\cdot s$',
+        'P = W / t': '$P = \\frac{W}{t}$',
+        'P = W/t': '$P = \\frac{W}{t}$',
+        'E = 1/2 · m · v²': '$E_{kin} = \\frac{1}{2} m v^2$',
+        'E = 1/2 * m * v²': '$E_{kin} = \\frac{1}{2} m v^2$',
+        'E_kin = 1/2 · m · v²': '$E_{kin} = \\frac{1}{2} m v^2$',
+        'E_kin = 1/2 * m * v²': '$E_{kin} = \\frac{1}{2} m v^2$',
+        'E_kin = 1/2 m v²': '$E_{kin} = \\frac{1}{2} m v^2$',
+        'E_pot = m · g · h': '$E_{pot} = m \\cdot g \\cdot h$',
+        'E_pot = m * g * h': '$E_{pot} = m \\cdot g \\cdot h$',
+        'E_pot = m g h': '$E_{pot} = m \\cdot g \\cdot h$',
+        'p = m · v': '$p = m \\cdot v$',
+        'p = m * v': '$p = m \\cdot v$',
+        // Elektrizität
+        'U = R · I': '$U = R \\cdot I$',
+        'U = R * I': '$U = R \\cdot I$',
+        'U = R I': '$U = R \\cdot I$',
+        'P = U · I': '$P = U \\cdot I$',
+        'P = U * I': '$P = U \\cdot I$',
+        'P = U I': '$P = U \\cdot I$',
+        'E = P · t': '$E = P \\cdot t$',
+        'E = P * t': '$E = P \\cdot t$',
+        'E = P t': '$E = P \\cdot t$',
+        'R = U / I': '$R = \\frac{U}{I}$',
+        'R = U/I': '$R = \\frac{U}{I}$',
+        'I = U / R': '$I = \\frac{U}{R}$',
+        'I = U/R': '$I = \\frac{U}{R}$',
+        // Energie
+        'E = m · c²': '$E = m c^2$',
+        'E = m * c²': '$E = m c^2$',
+        'E = mc²': '$E = m c^2$',
+    };
+
+    // Ersetze bekannte Formeln
+    for (const [textFormula, latex] of Object.entries(formulaMap)) {
+        // Case-insensitive Suche, aber exakter Match
+        const regex = new RegExp(textFormula.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+        result = result.replace(regex, latex);
+    }
+
+    // Bereinige doppelte Leerzeichen
+    result = result.replace(/\s{2,}/g, ' ');
+
+    return result;
+}
+
 // Cache für Modulübersicht, Schulinformationen und Curriculum (wird beim ersten Request geladen)
 let moduleOverviewCache = null;
 let moduleOverviewCacheTimestamp = null;
@@ -529,22 +600,11 @@ function isCurriculumRelatedQuery(message) {
 // System Prompt für LMG AI
 const BASE_SYSTEM_PROMPT = `Du bist die hausinterne künstliche Intelligenz des Leibniz-Montessori-Gymnasiums. Du unterstützt Schülerinnen und Schüler sowie deren Eltern bei schulrelevanten Themen und Fragen zur Schule.
 
-MATHEMATISCHE FORMELN - IMMER SO SCHREIBEN:
-Jede Formel MUSS mit Dollar-Zeichen umschlossen sein!
-- Inline: $v = \\frac{s}{t}$
-- Abgesetzt: $$E = mc^2$$
-
-Richtig: "Die Geschwindigkeit ist $v = \\frac{s}{t}$"
-Richtig: "Die Kraft berechnet sich mit $F = m \\cdot a$"
-
-Formel-Vorlagen zum Kopieren:
-- $v = \\frac{s}{t}$
-- $a = \\frac{\\Delta v}{\\Delta t}$
-- $F = m \\cdot a$
-- $W = F \\cdot s$
-- $P = \\frac{W}{t}$
-- $E_{kin} = \\frac{1}{2} m v^2$
-- $E_{pot} = m \\cdot g \\cdot h$
+MATHEMATISCHE FORMELN:
+Schreibe Formeln als normalen Text, OHNE spezielle Formatierung.
+Beispiel: v = s / t (Geschwindigkeit ist Weg durch Zeit)
+Beispiel: F = m · a (Kraft ist Masse mal Beschleunigung)
+Beispiel: E = 1/2 · m · v² (kinetische Energie)
 
 WICHTIG - SCHULWEBSITE:
 - Die offizielle Website ist: https://www.leibniz-montessori.de/
@@ -831,7 +891,7 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
                     },
                     {
                         role: 'model',
-                        parts: [{ text: 'Verstanden! Ich bin die hausinterne KI des Leibniz-Montessori-Gymnasiums und beantworte nur schulrelevante Fragen. Meine Antworten halte ich kurz und präzise. Bei Formeln verwende ich immer Dollar-Zeichen, z.B. $v = \\frac{s}{t}$ für Geschwindigkeit oder $F = m \\cdot a$ für Kraft.' }]
+                        parts: [{ text: 'Verstanden! Ich bin die hausinterne KI des Leibniz-Montessori-Gymnasiums und beantworte nur schulrelevante Fragen. Meine Antworten halte ich kurz und präzise. Formeln schreibe ich als Text, z.B. v = s / t für Geschwindigkeit oder F = m · a für Kraft.' }]
                     },
                     ...chatHistory
                 ],
@@ -909,54 +969,10 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
 
         // Prüfe ob erfolgreich
         if (text) {
-            // SICHERHEITSCHECK: Prüfe auf Platzhalter-Pattern
-            const hasPlaceholders = /LATEXINLINE\d*|LATEXBLOCK\d*|___LATEX_(INLINE|BLOCK)_\d+___/.test(text);
-
-            if (hasPlaceholders) {
-                console.warn('⚠️ AI hat Platzhalter statt LaTeX ausgegeben! Versuche Retry...');
-                console.warn('Original:', text);
-
-                // Retry mit expliziter Anweisung
-                try {
-                    const retryMessage = message + '\n\nWICHTIG: Schreibe jede mathematische Formel mit Dollar-Zeichen! Beispiel: Die Geschwindigkeit ist $v = \\frac{s}{t}$. Die Kraft ist $F = m \\cdot a$. KEINE anderen Formate verwenden!';
-
-                    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
-                    const retryChat = model.startChat({
-                        history: [
-                            { role: 'user', parts: [{ text: systemPrompt }] },
-                            { role: 'model', parts: [{ text: 'Verstanden! Ich schreibe alle Formeln mit Dollar-Zeichen, z.B. $v = \\frac{s}{t}$' }] },
-                            ...chatHistory
-                        ],
-                        generationConfig: { maxOutputTokens: 4000, temperature: 0.5 }
-                    });
-
-                    const retryResult = await Promise.race([
-                        retryChat.sendMessage([{ text: retryMessage }]).then(r => r.response.text()),
-                        new Promise((_, reject) => setTimeout(() => reject(new Error('Retry timeout')), 10000))
-                    ]);
-
-                    // Prüfe ob Retry erfolgreich war
-                    if (!/LATEXINLINE\d*|LATEXBLOCK\d*/.test(retryResult)) {
-                        console.log('✅ Retry erfolgreich - Formeln korrekt formatiert');
-                        return res.status(200).json({ response: retryResult });
-                    }
-                    console.warn('Retry hatte immer noch Platzhalter');
-                } catch (retryError) {
-                    console.error('Retry fehlgeschlagen:', retryError.message);
-                }
-
-                // Fallback: Ersetze Platzhalter mit lesbarem Text
-                let cleanedText = text
-                    .replace(/LATEXINLINE\d*/g, '[Formel]')
-                    .replace(/LATEXBLOCK\d*/g, '[Formel]')
-                    .replace(/___LATEX_(INLINE|BLOCK)_\d+___/g, '[Formel]');
-
-                cleanedText += '\n\n*Hinweis: Einige Formeln konnten nicht korrekt dargestellt werden. Bitte frage erneut nach den spezifischen Formeln.*';
-
-                return res.status(200).json({ response: cleanedText });
-            }
-
-            return res.status(200).json({ response: text });
+            // Konvertiere Text-Formeln zu LaTeX und entferne Platzhalter
+            const processedText = convertFormulasToLatex(text);
+            console.log('Antwort verarbeitet (Formeln konvertiert)');
+            return res.status(200).json({ response: processedText });
         }
 
         // Alle Versuche fehlgeschlagen
