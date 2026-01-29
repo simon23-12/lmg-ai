@@ -777,10 +777,21 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
         console.log(`PDF-Dokument: ${isPDF ? 'Ja' : 'Nein'}`);
         console.log(`Modell-Reihenfolge: ${MODELS.join(' → ')}`);
 
-        // Baue Chat-Verlauf auf
+        // Baue Chat-Verlauf auf (mit Bereinigung von Platzhaltern)
+        // WICHTIG: Entferne LATEXINLINE/LATEXBLOCK aus der History, damit die KI diese nicht "lernt"
+        const cleanContent = (text) => {
+            if (!text) return text;
+            return text
+                .replace(/LATEXINLINE\d*/g, '')
+                .replace(/LATEXBLOCK\d*/g, '')
+                .replace(/___LATEX_(INLINE|BLOCK)_\d+___/g, '')
+                .replace(/\s{2,}/g, ' ')  // Doppelte Leerzeichen entfernen
+                .trim();
+        };
+
         const chatHistory = history?.map(msg => ({
             role: msg.role === 'assistant' ? 'model' : 'user',
-            parts: [{ text: msg.content }]
+            parts: [{ text: cleanContent(msg.content) }]
         })) || [];
 
         // Funktion zum Senden der Nachricht mit einem bestimmten Modell (mit Timeout)
@@ -820,7 +831,7 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
                     },
                     {
                         role: 'model',
-                        parts: [{ text: 'Verstanden! Ich bin die hausinterne KI des Leibniz-Montessori-Gymnasiums und beantworte nur schulrelevante Fragen. Meine Antworten halte ich kurz und präzise.' }]
+                        parts: [{ text: 'Verstanden! Ich bin die hausinterne KI des Leibniz-Montessori-Gymnasiums und beantworte nur schulrelevante Fragen. Meine Antworten halte ich kurz und präzise. Bei Formeln verwende ich immer Dollar-Zeichen, z.B. $v = \\frac{s}{t}$ für Geschwindigkeit oder $F = m \\cdot a$ für Kraft.' }]
                     },
                     ...chatHistory
                 ],
@@ -902,23 +913,44 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
             const hasPlaceholders = /LATEXINLINE\d*|LATEXBLOCK\d*|___LATEX_(INLINE|BLOCK)_\d+___/.test(text);
 
             if (hasPlaceholders) {
-                console.warn('⚠️ AI hat Platzhalter statt LaTeX ausgegeben!');
+                console.warn('⚠️ AI hat Platzhalter statt LaTeX ausgegeben! Versuche Retry...');
                 console.warn('Original:', text);
 
-                // Ersetze Platzhalter mit lesbaren Formeln wo möglich
-                let cleanedText = text
-                    // Versuche bekannte Patterns zu ersetzen
-                    .replace(/LATEXINLINE0/g, '$v$')
-                    .replace(/LATEXINLINE1/g, '$s$')
-                    .replace(/LATEXINLINE2/g, '$t$')
-                    .replace(/LATEXINLINE3/g, '$v = s/t$')
-                    // Entferne verbleibende Platzhalter
-                    .replace(/___LATEX_INLINE_\d+___/g, '[Formel]')
-                    .replace(/___LATEX_BLOCK_\d+___/g, '[Formel]')
-                    .replace(/LATEXINLINE\d*/g, '[Formel]')
-                    .replace(/LATEXBLOCK\d*/g, '[Formel]');
+                // Retry mit expliziter Anweisung
+                try {
+                    const retryMessage = message + '\n\nWICHTIG: Schreibe jede mathematische Formel mit Dollar-Zeichen! Beispiel: Die Geschwindigkeit ist $v = \\frac{s}{t}$. Die Kraft ist $F = m \\cdot a$. KEINE anderen Formate verwenden!';
 
-                // Füge Hinweis hinzu
+                    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+                    const retryChat = model.startChat({
+                        history: [
+                            { role: 'user', parts: [{ text: systemPrompt }] },
+                            { role: 'model', parts: [{ text: 'Verstanden! Ich schreibe alle Formeln mit Dollar-Zeichen, z.B. $v = \\frac{s}{t}$' }] },
+                            ...chatHistory
+                        ],
+                        generationConfig: { maxOutputTokens: 4000, temperature: 0.5 }
+                    });
+
+                    const retryResult = await Promise.race([
+                        retryChat.sendMessage([{ text: retryMessage }]).then(r => r.response.text()),
+                        new Promise((_, reject) => setTimeout(() => reject(new Error('Retry timeout')), 10000))
+                    ]);
+
+                    // Prüfe ob Retry erfolgreich war
+                    if (!/LATEXINLINE\d*|LATEXBLOCK\d*/.test(retryResult)) {
+                        console.log('✅ Retry erfolgreich - Formeln korrekt formatiert');
+                        return res.status(200).json({ response: retryResult });
+                    }
+                    console.warn('Retry hatte immer noch Platzhalter');
+                } catch (retryError) {
+                    console.error('Retry fehlgeschlagen:', retryError.message);
+                }
+
+                // Fallback: Ersetze Platzhalter mit lesbarem Text
+                let cleanedText = text
+                    .replace(/LATEXINLINE\d*/g, '[Formel]')
+                    .replace(/LATEXBLOCK\d*/g, '[Formel]')
+                    .replace(/___LATEX_(INLINE|BLOCK)_\d+___/g, '[Formel]');
+
                 cleanedText += '\n\n*Hinweis: Einige Formeln konnten nicht korrekt dargestellt werden. Bitte frage erneut nach den spezifischen Formeln.*';
 
                 return res.status(200).json({ response: cleanedText });
