@@ -1,73 +1,79 @@
 // Vercel Serverless Function für Google Gemini API
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-// Funktion zum Konvertieren von Text-Formeln zu LaTeX
-// Erkennt Patterns wie "v = s / t" und konvertiert zu "$v = \frac{s}{t}$"
+// Funktion zum Konvertieren von Gemini's LATEXINLINE-Platzhaltern zu echten LaTeX-Formeln
+// Gemini gibt Formeln als "LATEXINLINE0 (Beschreibung)" aus - wir ersetzen sie mit echtem LaTeX
 function convertFormulasToLatex(text) {
     if (!text) return text;
 
-    // Entferne zuerst alle LATEXINLINE/LATEXBLOCK Platzhalter
-    let result = text
+    let result = text;
+
+    // Mapping von Beschreibungs-Keywords zu LaTeX-Formeln
+    const descriptionToLatex = [
+        // Mechanik - Kraft
+        { keywords: ['kraft', 'masse', 'beschleunigung', 'f = m'], latex: '$F = m \\cdot a$' },
+        { keywords: ['newton', 'grundgesetz', 'dynamik'], latex: '$F = m \\cdot a$' },
+
+        // Mechanik - Geschwindigkeit
+        { keywords: ['geschwindigkeit', 'weg', 'zeit', 'v = s'], latex: '$v = \\frac{s}{t}$' },
+
+        // Mechanik - Beschleunigung
+        { keywords: ['beschleunigung', 'geschwindigkeitsänderung', 'a = '], latex: '$a = \\frac{\\Delta v}{\\Delta t}$' },
+
+        // Mechanik - Energie
+        { keywords: ['kinetische energie', 'bewegungsenergie', 'e_kin', 'einhalb', '1/2'], latex: '$E_{kin} = \\frac{1}{2} m v^2$' },
+        { keywords: ['potenzielle energie', 'lageenergie', 'e_pot', 'höhe'], latex: '$E_{pot} = m \\cdot g \\cdot h$' },
+
+        // Mechanik - Arbeit & Leistung
+        { keywords: ['arbeit', 'kraft mal weg', 'w = f'], latex: '$W = F \\cdot s$' },
+        { keywords: ['leistung', 'arbeit pro zeit', 'p = w'], latex: '$P = \\frac{W}{t}$' },
+
+        // Mechanik - Impuls
+        { keywords: ['impuls', 'p = m'], latex: '$p = m \\cdot v$' },
+
+        // Elektrizität - Ohm
+        { keywords: ['ohm', 'spannung', 'widerstand', 'stromstärke', 'u = r'], latex: '$U = R \\cdot I$' },
+        { keywords: ['widerstand', 'r = u'], latex: '$R = \\frac{U}{I}$' },
+        { keywords: ['stromstärke', 'i = u'], latex: '$I = \\frac{U}{R}$' },
+
+        // Elektrizität - Leistung
+        { keywords: ['elektrische leistung', 'spannung mal', 'p = u'], latex: '$P = U \\cdot I$' },
+        { keywords: ['elektrische energie', 'leistung mal zeit', 'e = p'], latex: '$E = P \\cdot t$' },
+
+        // Relativität
+        { keywords: ['einstein', 'e = mc', 'lichtgeschwindigkeit'], latex: '$E = m c^2$' },
+    ];
+
+    // Finde und ersetze LATEXINLINE-Pattern mit Beschreibung in Klammern
+    // Pattern: "LATEXINLINE0 (Beschreibung)" oder "LATEXINLINE0: Beschreibung"
+    const latexPattern = /LATEXINLINE\d+\s*[:\(]?\s*([^):\n]+?)[\):]?(?=\s*[,.\n]|$)/gi;
+
+    result = result.replace(latexPattern, (_, description) => {
+        const lowerDesc = description.toLowerCase();
+
+        // Finde passende Formel basierend auf Keywords in der Beschreibung
+        for (const mapping of descriptionToLatex) {
+            const matchCount = mapping.keywords.filter(kw => lowerDesc.includes(kw)).length;
+            if (matchCount >= 1) {
+                return mapping.latex;
+            }
+        }
+
+        // Fallback: Beschreibung behalten wenn keine Formel gefunden
+        return `(${description.trim()})`;
+    });
+
+    // Entferne verbleibende LATEXINLINE/LATEXBLOCK ohne Beschreibung
+    result = result
         .replace(/LATEXINLINE\d*/g, '')
         .replace(/LATEXBLOCK\d*/g, '')
         .replace(/___LATEX_(INLINE|BLOCK)_\d+___/g, '');
 
-    // Bekannte Formeln als Map (Text -> LaTeX)
-    const formulaMap = {
-        // Mechanik
-        'v = s / t': '$v = \\frac{s}{t}$',
-        'v = s/t': '$v = \\frac{s}{t}$',
-        'a = Δv / Δt': '$a = \\frac{\\Delta v}{\\Delta t}$',
-        'a = Δv/Δt': '$a = \\frac{\\Delta v}{\\Delta t}$',
-        'a = v / t': '$a = \\frac{v}{t}$',
-        'a = v/t': '$a = \\frac{v}{t}$',
-        'F = m · a': '$F = m \\cdot a$',
-        'F = m * a': '$F = m \\cdot a$',
-        'F = m a': '$F = m \\cdot a$',
-        'W = F · s': '$W = F \\cdot s$',
-        'W = F * s': '$W = F \\cdot s$',
-        'W = F s': '$W = F \\cdot s$',
-        'P = W / t': '$P = \\frac{W}{t}$',
-        'P = W/t': '$P = \\frac{W}{t}$',
-        'E = 1/2 · m · v²': '$E_{kin} = \\frac{1}{2} m v^2$',
-        'E = 1/2 * m * v²': '$E_{kin} = \\frac{1}{2} m v^2$',
-        'E_kin = 1/2 · m · v²': '$E_{kin} = \\frac{1}{2} m v^2$',
-        'E_kin = 1/2 * m * v²': '$E_{kin} = \\frac{1}{2} m v^2$',
-        'E_kin = 1/2 m v²': '$E_{kin} = \\frac{1}{2} m v^2$',
-        'E_pot = m · g · h': '$E_{pot} = m \\cdot g \\cdot h$',
-        'E_pot = m * g * h': '$E_{pot} = m \\cdot g \\cdot h$',
-        'E_pot = m g h': '$E_{pot} = m \\cdot g \\cdot h$',
-        'p = m · v': '$p = m \\cdot v$',
-        'p = m * v': '$p = m \\cdot v$',
-        // Elektrizität
-        'U = R · I': '$U = R \\cdot I$',
-        'U = R * I': '$U = R \\cdot I$',
-        'U = R I': '$U = R \\cdot I$',
-        'P = U · I': '$P = U \\cdot I$',
-        'P = U * I': '$P = U \\cdot I$',
-        'P = U I': '$P = U \\cdot I$',
-        'E = P · t': '$E = P \\cdot t$',
-        'E = P * t': '$E = P \\cdot t$',
-        'E = P t': '$E = P \\cdot t$',
-        'R = U / I': '$R = \\frac{U}{I}$',
-        'R = U/I': '$R = \\frac{U}{I}$',
-        'I = U / R': '$I = \\frac{U}{R}$',
-        'I = U/R': '$I = \\frac{U}{R}$',
-        // Energie
-        'E = m · c²': '$E = m c^2$',
-        'E = m * c²': '$E = m c^2$',
-        'E = mc²': '$E = m c^2$',
-    };
-
-    // Ersetze bekannte Formeln
-    for (const [textFormula, latex] of Object.entries(formulaMap)) {
-        // Case-insensitive Suche, aber exakter Match
-        const regex = new RegExp(textFormula.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-        result = result.replace(regex, latex);
-    }
-
-    // Bereinige doppelte Leerzeichen
-    result = result.replace(/\s{2,}/g, ' ');
+    // Bereinige doppelte Leerzeichen und Klammern
+    result = result
+        .replace(/\s{2,}/g, ' ')
+        .replace(/\(\s*\)/g, '')
+        .trim();
 
     return result;
 }
