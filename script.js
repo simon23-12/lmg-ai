@@ -238,7 +238,17 @@ function addMessage(content, role, file = null, fileData = null) {
         }
     }
 
-    // Text-Inhalt hinzufügen (mit Markdown-Parsing)
+    // WICHTIG: Original-Content in History speichern (VOR parseMarkdown)
+    // Sonst sieht die KI die internen Platzhalter und reproduziert sie!
+    if (content) {
+        chatHistory.push({
+            role: role,
+            content: content,  // Original-Text ohne HTML/Platzhalter
+            timestamp: new Date()
+        });
+    }
+
+    // Text-Inhalt für Anzeige rendern (mit Markdown-Parsing)
     if (content) {
         const textP = document.createElement('p');
         textP.innerHTML = parseMarkdown(content);
@@ -252,13 +262,6 @@ function addMessage(content, role, file = null, fileData = null) {
     messageDiv.appendChild(contentDiv);
     messageDiv.appendChild(timestamp);
     messagesContainer.appendChild(messageDiv);
-
-    // Zur History hinzufügen (ohne Datei-Daten für den Kontext)
-    chatHistory.push({
-        role: role,
-        content: content,
-        timestamp: new Date()
-    });
 
     // Nach unten scrollen
     scrollToBottom();
