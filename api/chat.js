@@ -529,22 +529,22 @@ function isCurriculumRelatedQuery(message) {
 // System Prompt für LMG AI
 const BASE_SYSTEM_PROMPT = `Du bist die hausinterne künstliche Intelligenz des Leibniz-Montessori-Gymnasiums. Du unterstützt Schülerinnen und Schüler sowie deren Eltern bei schulrelevanten Themen und Fragen zur Schule.
 
-KRITISCH - MATHEMATISCHE FORMELN (HÖCHSTE PRIORITÄT):
-Gib mathematische Formeln IMMER als echten LaTeX-Code aus!
-Verwende diese Formate:
-- Inline (im Text): $v = \\frac{s}{t}$ oder \\(v = \\frac{s}{t}\\)
-- Abgesetzt (zentriert): $$E = mc^2$$ oder \\[E = mc^2\\]
+MATHEMATISCHE FORMELN - IMMER SO SCHREIBEN:
+Jede Formel MUSS mit Dollar-Zeichen umschlossen sein!
+- Inline: $v = \\frac{s}{t}$
+- Abgesetzt: $$E = mc^2$$
 
-KONKRETE BEISPIELE (GENAU SO SCHREIBEN):
-- Geschwindigkeit: $v = \\frac{s}{t}$
-- Kraft: $F = m \\cdot a$
-- Arbeit: $W = F \\cdot s$
-- Leistung: $P = \\frac{W}{t}$
+Richtig: "Die Geschwindigkeit ist $v = \\frac{s}{t}$"
+Richtig: "Die Kraft berechnet sich mit $F = m \\cdot a$"
 
-ABSOLUT VERBOTEN:
-- NIEMALS Platzhalter wie "LATEXINLINE", "LATEXBLOCK", "Formel1", etc.
-- NIEMALS Text wie "siehe Formel oben" - schreibe die Formel direkt aus
-- NIEMALS nur Variablennamen ohne $-Zeichen (z.B. "v = s/t" → falsch, muss "$v = \\frac{s}{t}$" sein)
+Formel-Vorlagen zum Kopieren:
+- $v = \\frac{s}{t}$
+- $a = \\frac{\\Delta v}{\\Delta t}$
+- $F = m \\cdot a$
+- $W = F \\cdot s$
+- $P = \\frac{W}{t}$
+- $E_{kin} = \\frac{1}{2} m v^2$
+- $E_{pot} = m \\cdot g \\cdot h$
 
 WICHTIG - SCHULWEBSITE:
 - Die offizielle Website ist: https://www.leibniz-montessori.de/
@@ -570,22 +570,6 @@ Wichtige Regeln:
 - Passe deine Sprache an das Niveau des Gesprächspartners an (Schüler oder Eltern)
 - Gib bei Hausaufgaben Hilfestellung, aber keine kompletten Lösungen
 - Frage nach, wenn etwas unklar ist
-
-BEISPIEL-ANTWORT MIT FORMELN:
-"In der Physik Klasse 10 sind diese Formeln wichtig:
-
-1. Geschwindigkeit: $v = \\frac{s}{t}$ (Weg durch Zeit)
-2. Beschleunigung: $a = \\frac{\\Delta v}{\\Delta t}$
-3. Kraft: $F = m \\cdot a$ (Masse mal Beschleunigung)
-4. Arbeit: $W = F \\cdot s$
-5. Leistung: $P = \\frac{W}{t}$
-6. Kinetische Energie: $E_{kin} = \\frac{1}{2} m v^2$
-
-Für abgesetzte Formeln verwende $$...$$:
-
-$$E_{pot} = m \\cdot g \\cdot h$$"
-
-NOCHMAL: Schreibe ECHTE LaTeX-Formeln, keine Platzhalter!
 
 Antworte auf Deutsch und sei freundlich und unterstützend.
 
@@ -914,21 +898,33 @@ Denke daran: Hilf beim Lernen, gib aber keine vollständigen Lösungen!`;
 
         // Prüfe ob erfolgreich
         if (text) {
-            // SICHERHEITSCHECK: Entferne interne Platzhalter falls die KI diese ausgegeben hat
-            // Diese sollten NIEMALS in der Antwort vorkommen, da sie parseMarkdown() Interna sind
-            const cleanedText = text
-                .replace(/___LATEX_INLINE_\d+___/g, '')
-                .replace(/___LATEX_BLOCK_\d+___/g, '')
-                .replace(/LATEXINLINE\d*/g, '')
-                .replace(/LATEXBLOCK\d*/g, '');
+            // SICHERHEITSCHECK: Prüfe auf Platzhalter-Pattern
+            const hasPlaceholders = /LATEXINLINE\d*|LATEXBLOCK\d*|___LATEX_(INLINE|BLOCK)_\d+___/.test(text);
 
-            if (cleanedText !== text) {
-                console.warn('⚠️ AI hat interne Platzhalter ausgegeben! Diese wurden entfernt.');
+            if (hasPlaceholders) {
+                console.warn('⚠️ AI hat Platzhalter statt LaTeX ausgegeben!');
                 console.warn('Original:', text);
-                console.warn('Bereinigt:', cleanedText);
+
+                // Ersetze Platzhalter mit lesbaren Formeln wo möglich
+                let cleanedText = text
+                    // Versuche bekannte Patterns zu ersetzen
+                    .replace(/LATEXINLINE0/g, '$v$')
+                    .replace(/LATEXINLINE1/g, '$s$')
+                    .replace(/LATEXINLINE2/g, '$t$')
+                    .replace(/LATEXINLINE3/g, '$v = s/t$')
+                    // Entferne verbleibende Platzhalter
+                    .replace(/___LATEX_INLINE_\d+___/g, '[Formel]')
+                    .replace(/___LATEX_BLOCK_\d+___/g, '[Formel]')
+                    .replace(/LATEXINLINE\d*/g, '[Formel]')
+                    .replace(/LATEXBLOCK\d*/g, '[Formel]');
+
+                // Füge Hinweis hinzu
+                cleanedText += '\n\n*Hinweis: Einige Formeln konnten nicht korrekt dargestellt werden. Bitte frage erneut nach den spezifischen Formeln.*';
+
+                return res.status(200).json({ response: cleanedText });
             }
 
-            return res.status(200).json({ response: cleanedText });
+            return res.status(200).json({ response: text });
         }
 
         // Alle Versuche fehlgeschlagen
