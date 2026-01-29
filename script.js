@@ -120,16 +120,32 @@ async function sendMessage() {
     }
 }
 
-// Einfache Markdown-zu-HTML-Konvertierung
+// Einfache Markdown-zu-HTML-Konvertierung mit LaTeX-Unterstützung
 function parseMarkdown(text) {
     if (!text) return '';
 
-    // Escape HTML entities erst
+    // 1. LaTeX-Formeln extrahieren und temporär ersetzen (vor HTML-Escaping!)
+    const latexBlocks = [];
+    const latexInline = [];
+
+    // Block-Formeln ($$...$$) zuerst (müssen vor inline kommen)
+    text = text.replace(/\$\$([\s\S]+?)\$\$/g, (match, formula) => {
+        latexBlocks.push(formula.trim());
+        return `___LATEX_BLOCK_${latexBlocks.length - 1}___`;
+    });
+
+    // Inline-Formeln ($...$)
+    text = text.replace(/\$(.+?)\$/g, (match, formula) => {
+        latexInline.push(formula.trim());
+        return `___LATEX_INLINE_${latexInline.length - 1}___`;
+    });
+
+    // 2. Escape HTML entities
     text = text.replace(/&/g, '&amp;')
                .replace(/</g, '&lt;')
                .replace(/>/g, '&gt;');
 
-    // Markdown-Formatierung
+    // 3. Markdown-Formatierung
     // **bold** oder __bold__
     text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
                .replace(/__(.+?)__/g, '<strong>$1</strong>');
@@ -143,6 +159,37 @@ function parseMarkdown(text) {
 
     // Zeilenumbrüche
     text = text.replace(/\n/g, '<br>');
+
+    // 4. LaTeX-Formeln rendern und zurücksetzen
+    // Block-Formeln
+    text = text.replace(/___LATEX_BLOCK_(\d+)___/g, (match, index) => {
+        const formula = latexBlocks[parseInt(index)];
+        try {
+            return katex.renderToString(formula, {
+                displayMode: true,
+                throwOnError: false,
+                errorColor: '#cc0000'
+            });
+        } catch (e) {
+            console.error('KaTeX Block-Fehler:', e);
+            return `<span style="color: #cc0000">LaTeX-Fehler: ${formula}</span>`;
+        }
+    });
+
+    // Inline-Formeln
+    text = text.replace(/___LATEX_INLINE_(\d+)___/g, (match, index) => {
+        const formula = latexInline[parseInt(index)];
+        try {
+            return katex.renderToString(formula, {
+                displayMode: false,
+                throwOnError: false,
+                errorColor: '#cc0000'
+            });
+        } catch (e) {
+            console.error('KaTeX Inline-Fehler:', e);
+            return `<span style="color: #cc0000">LaTeX-Fehler: ${formula}</span>`;
+        }
+    });
 
     return text;
 }
