@@ -161,6 +161,19 @@ function parseMarkdown(text) {
     text = text.replace(/\n/g, '<br>');
 
     // 4. LaTeX-Formeln rendern und zurücksetzen
+    // Prüfe ob KaTeX verfügbar ist
+    if (typeof katex === 'undefined') {
+        console.warn('KaTeX ist nicht geladen! Formeln werden als Text angezeigt.');
+        // Fallback: Zeige Formeln als Code
+        text = text.replace(/___LATEX_BLOCK_(\d+)___/g, (match, index) => {
+            return `<code>$$${latexBlocks[parseInt(index)]}$$</code>`;
+        });
+        text = text.replace(/___LATEX_INLINE_(\d+)___/g, (match, index) => {
+            return `<code>$${latexInline[parseInt(index)]}$</code>`;
+        });
+        return text;
+    }
+
     // Block-Formeln
     text = text.replace(/___LATEX_BLOCK_(\d+)___/g, (match, index) => {
         const formula = latexBlocks[parseInt(index)];
