@@ -120,6 +120,33 @@ async function sendMessage() {
     }
 }
 
+// Einfache Markdown-zu-HTML-Konvertierung
+function parseMarkdown(text) {
+    if (!text) return '';
+
+    // Escape HTML entities erst
+    text = text.replace(/&/g, '&amp;')
+               .replace(/</g, '&lt;')
+               .replace(/>/g, '&gt;');
+
+    // Markdown-Formatierung
+    // **bold** oder __bold__
+    text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+               .replace(/__(.+?)__/g, '<strong>$1</strong>');
+
+    // *italic* oder _italic_
+    text = text.replace(/\*(.+?)\*/g, '<em>$1</em>')
+               .replace(/_(.+?)_/g, '<em>$1</em>');
+
+    // `code`
+    text = text.replace(/`(.+?)`/g, '<code>$1</code>');
+
+    // Zeilenumbrüche
+    text = text.replace(/\n/g, '<br>');
+
+    return text;
+}
+
 // Nachricht zum Chat hinzufügen
 function addMessage(content, role, file = null, fileData = null) {
     const messageDiv = document.createElement('div');
@@ -151,10 +178,10 @@ function addMessage(content, role, file = null, fileData = null) {
         }
     }
 
-    // Text-Inhalt hinzufügen
+    // Text-Inhalt hinzufügen (mit Markdown-Parsing)
     if (content) {
         const textP = document.createElement('p');
-        textP.textContent = content;
+        textP.innerHTML = parseMarkdown(content);
         contentDiv.appendChild(textP);
     }
 
